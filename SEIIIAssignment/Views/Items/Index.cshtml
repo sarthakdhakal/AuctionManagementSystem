@@ -1,0 +1,34 @@
+﻿@model IEnumerable<SEIIIAssignment.Models.Item>
+
+@{
+    ViewData["Title"] = "Items";
+}
+
+<h1>Items </h1>
+
+
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+
+<div class="row">
+<div class="col-8">
+
+</div>
+<div class="col-4">
+
+
+</div>
+<div class="container">
+    <table class="table table-striped" style="width: 60%">
+       @foreach (var item in Model) {
+            <tr>
+                
+                <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
+            </tr>
+         
+        }
+    </table>
+</div>
+</div>
