@@ -7,88 +7,96 @@
 <h1>Create</h1>
 
 <h4>Item</h4>
-<hr />
+<hr/>
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control"/>
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="ProducedYear" class="control-label"></label>
-                <input asp-for="ProducedYear" class="form-control" />
+                <input asp-for="ProducedYear" class="form-control"/>
                 <span asp-validation-for="ProducedYear" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Classification" class="control-label"></label>
-                <input asp-for="Classification" class="form-control" />
-                <span asp-validation-for="Classification" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="TextualDescription" class="control-label"></label>
-                <input asp-for="TextualDescription" class="form-control" />
+                <textarea asp-for="TextualDescription" class="form-control"></textarea>
                 <span asp-validation-for="TextualDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" class="form-control" />
+                <input type="file"  asp-for="Image" accept="image/*" class="form-control"/>
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
+                <input asp-for="CreatedAt" class="form-control"/>
                 <span asp-validation-for="CreatedAt" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Artist" class="control-label"></label>
-                <input asp-for="Artist" class="form-control" />
+                <input asp-for="Artist" class="form-control"/>
                 <span asp-validation-for="Artist" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ItemType" class="control-label"></label>
-                <input asp-for="ItemType" class="form-control" />
+                <input asp-for="ItemType" class="form-control"/>
                 <span asp-validation-for="ItemType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Material" class="control-label"></label>
-                <input asp-for="Material" class="form-control" />
+                <input asp-for="Material" class="form-control"/>
                 <span asp-validation-for="Material" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Weight" class="control-label"></label>
-                <input asp-for="Weight" class="form-control" />
+                <input asp-for="Weight" class="form-control"/>
                 <span asp-validation-for="Weight" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Height" class="control-label"></label>
-                <input asp-for="Height" class="form-control" />
+                <input asp-for="Height" class="form-control"/>
                 <span asp-validation-for="Height" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Length" class="control-label"></label>
-                <input asp-for="Length" class="form-control" />
+                <input asp-for="Length" class="form-control"/>
                 <span asp-validation-for="Length" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Medium" class="control-label"></label>
-                <input asp-for="Medium" class="form-control" />
+                <input asp-for="Medium" class="form-control"/>
                 <span asp-validation-for="Medium" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IsFramed" class="control-label"></label>
-                <input asp-for="IsFramed" class="form-control" />
+                <select asp-for="IsFramed" class="form-control" d="Select your option">
+                    <option value="" disabled selected>Select your option</option>
+                    <option value="1"> Yes</option>
+                    <option value="0"> No</option>
+                </select>
                 <span asp-validation-for="IsFramed" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
-                <input asp-for="Type" class="form-control" />
+                <input asp-for="Type" class="form-control"/>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="ProductName" class="control-label"></label>
-                <input asp-for="ProductName" class="form-control" />
-                <span asp-validation-for="ProductName" class="text-danger"></span>
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryName"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="ClassificationId" class="control-label"></label>
+                <select asp-for="ClassificationId" class="form-control" asp-items="ViewBag.ClassificationName"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary"/>
             </div>
         </form>
     </div>
@@ -99,5 +107,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

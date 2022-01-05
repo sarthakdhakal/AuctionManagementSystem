@@ -19,6 +19,8 @@ namespace SEIIIAssignment.Models
 
         public virtual DbSet<Auction> Auctions { get; set; }
         public virtual DbSet<Bid> Bids { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Classification> Classifications { get; set; }
         public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
@@ -49,11 +51,6 @@ namespace SEIIIAssignment.Models
                     .HasForeignKey(d => d.BoughtbyId)
                     .HasConstraintName("FK_Auction_User");
 
-                entity.HasOne(d => d.Item)
-                    .WithMany(p => p.Auctions)
-                    .HasForeignKey(d => d.ItemId)
-                    .HasConstraintName("FK_Auction_Item");
-
                 entity.HasOne(d => d.Postedby)
                     .WithMany(p => p.AuctionPostedbies)
                     .HasForeignKey(d => d.PostedbyId)
@@ -77,6 +74,24 @@ namespace SEIIIAssignment.Models
                     .HasConstraintName("FK_Bid_User");
             });
 
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.ToTable("Category");
+
+                entity.Property(e => e.CategoryName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Classification>(entity =>
+            {
+                entity.ToTable("Classification");
+
+                entity.Property(e => e.ClassificationName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Item>(entity =>
             {
                 entity.ToTable("Item");
@@ -85,13 +100,11 @@ namespace SEIIIAssignment.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Classification)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
-                entity.Property(e => e.Image).HasColumnType("image");
+                entity.Property(e => e.Image)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ItemType)
                     .HasMaxLength(50)
@@ -115,6 +128,16 @@ namespace SEIIIAssignment.Models
                 entity.Property(e => e.Type)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.Items)
+                    .HasForeignKey(d => d.CategoryId)
+                    .HasConstraintName("FK_Item_Category");
+
+                entity.HasOne(d => d.Classification)
+                    .WithMany(p => p.Items)
+                    .HasForeignKey(d => d.ClassificationId)
+                    .HasConstraintName("FK_Item_Classification");
             });
 
             modelBuilder.Entity<User>(entity =>

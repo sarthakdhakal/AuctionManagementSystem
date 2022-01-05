@@ -17,12 +17,6 @@
             @Html.DisplayFor(model => model.ProducedYear)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Classification)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Classification)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.TextualDescription)
         </dt>
         <dd class = "col-sm-10">
@@ -99,6 +93,18 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ProductName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Category.CategoryId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Classification)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Classification.ClassificationId)
         </dd>
     </dl>
 </div>

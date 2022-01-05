@@ -1,27 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using SEIIIAssignment.Models;
 
 namespace SEIIIAssignment.Controllers
 {
     public class ItemsController : Controller
     {
+        private IWebHostEnvironment _environment;
         private readonly SEIIIContext _context;
 
-        public ItemsController(SEIIIContext context)
+        public ItemsController(SEIIIContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         // GET: Items
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Items.ToListAsync());
+            var SEIIIContext = _context.Items.Include(i => i.Category).Include(i => i.Classification);
+            return View(await SEIIIContext.ToListAsync());
         }
 
         // GET: Items/Details/5
@@ -33,6 +39,8 @@ namespace SEIIIAssignment.Controllers
             }
 
             var item = await _context.Items
+                .Include(i => i.Category)
+                .Include(i => i.Classification)
                 .FirstOrDefaultAsync(m => m.ItemId == id);
             if (item == null)
             {
@@ -45,22 +53,52 @@ namespace SEIIIAssignment.Controllers
         // GET: Items/Create
         public IActionResult Create()
         {
+            ViewData["CategoryName"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
+            ViewData["ClassificationName"] =
+                new SelectList(_context.Classifications, "ClassificationId", "ClassificationName");
             return View();
         }
 
-        // POST: Items/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ItemId,ProducedYear,Classification,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Type,ProductName")] Item item)
+        public async Task<IActionResult> Create(
+            [Bind(
+                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Type,ProductName,CategoryName,ClassificationId")]
+            Item item)
         {
             if (ModelState.IsValid)
             {
+                var files = HttpContext.Request.Form.Files;
+                foreach (var image in files)
+                {
+                    if (image != null && image.Length > 0)
+                    {
+                        var file = image;
+                        var uploads = Path.Combine(_environment.WebRootPath, "uploads\\img\\products");
+
+                        if (file.Length > 0)
+                        {
+                            var fileName = Guid.NewGuid().ToString().Replace("-", "") +
+                                           Path.GetExtension(file.FileName);
+                            using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                            {
+                                await file.CopyToAsync(fileStream);
+                                item.Image = file.FileName;
+                            }
+                        }
+                    }
+                }
+
                 _context.Add(item);
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewData["CategoryName"] =
+                new SelectList(_context.Categories, "CategoryId", "CategoryName", item.CategoryId);
+            ViewData["ClassificationName"] = new SelectList(_context.Classifications, "ClassificationId",
+                "ClassificationId", item.ClassificationId);
             return View(item);
         }
 
@@ -77,15 +115,20 @@ namespace SEIIIAssignment.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["CategoryName"] = new SelectList(_context.Categories, "CategoryId", "CategoryName",
+                item.Category.CategoryName);
+            ViewData["ClassificationName"] = new SelectList(_context.Classifications, "ClassificationId",
+                "ClassificationId", item.ClassificationId);
             return View(item);
         }
 
-        // POST: Items/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ItemId,ProducedYear,Classification,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Type,ProductName")] Item item)
+        public async Task<IActionResult> Edit(int id,
+            [Bind(
+                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Type,ProductName,CategoryId,ClassificationId")]
+            Item item)
         {
             if (id != item.ItemId)
             {
@@ -110,8 +153,14 @@ namespace SEIIIAssignment.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewData["CategoryName"] =
+                new SelectList(_context.Categories, "CategoryId", "CategoryName", item.CategoryId);
+            ViewData["ClassificationName"] = new SelectList(_context.Classifications, "ClassificationId",
+                "ClassificationName", item.ClassificationId);
             return View(item);
         }
 
@@ -124,6 +173,8 @@ namespace SEIIIAssignment.Controllers
             }
 
             var item = await _context.Items
+                .Include(i => i.Category)
+                .Include(i => i.Classification)
                 .FirstOrDefaultAsync(m => m.ItemId == id);
             if (item == null)
             {
