@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace SEIIIAssignment.Controllers
         // GET: Auctions
         public async Task<IActionResult> Index()
         {
+
             var SEIIIContext = _context.Auctions.Include(a => a.Boughtby).Include(a => a.Postedby);
             return View(await SEIIIContext.ToListAsync());
         }

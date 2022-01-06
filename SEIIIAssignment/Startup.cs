@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,14 @@ namespace SEIIIAssignment
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DevConnection"));
             });
+            services.AddHangfire(options =>
+            {
+                options.UseSqlServerStorage(Configuration.GetConnectionString("DevConnection"));
+            });
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+            });
+
             services.AddControllersWithViews();
         }
 
@@ -47,12 +56,14 @@ namespace SEIIIAssignment
             }
 
             app.UseHttpsRedirection();
+            app.UseSession();
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SEIIIAssignment.Models;
@@ -20,6 +21,7 @@ namespace SEIIIAssignment.Controllers
 
         public IActionResult Index()
         {
+            BackgroundJob.Enqueue(() => Console.WriteLine(DateTime.Today.DayOfWeek));
             return View();
         }
 

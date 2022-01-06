@@ -5,7 +5,16 @@
 }
 
 <h1>Index</h1>
-
+<form method="get" asp-action="Index" >
+    <div class="input-group">
+        <input class="form-control" name="searchString" value="@ViewData["ItemDetails"]">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">
+                Search
+            </button>
+        </div>
+    </div>
+</form>
 <p>
     <a asp-action="Create">Create New</a>
 </p>

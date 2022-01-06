@@ -23,6 +23,7 @@ namespace SEIIIAssignment.Models
         public double? SellingAmount { get; set; }
 
         public virtual User Boughtby { get; set; }
+        public virtual Item Item { get; set; }
         public virtual User Postedby { get; set; }
         public virtual ICollection<Bid> Bids { get; set; }
     }

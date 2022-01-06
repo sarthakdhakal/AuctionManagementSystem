@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using SEIIIAssignment.Models;
@@ -24,8 +25,17 @@ namespace SEIIIAssignment.Controllers
         }
 
         // GET: Items
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchString)
         {
+            ViewData["ItemDetails"] = searchString;
+            var items = from i in _context.Items
+                select i;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                items = items.Where(i => i.ProductName.Contains(searchString) ||
+                                         i.Type.Contains(searchString) ||i.Category.CategoryName.Contains(searchString)||i.Classification.ClassificationName.Contains(searchString)).Include(i => i.Category).Include(i => i.Classification);;
+                return View(await items.AsNoTracking().ToListAsync());
+            }
             var SEIIIContext = _context.Items.Include(i => i.Category).Include(i => i.Classification);
             return View(await SEIIIContext.ToListAsync());
         }
@@ -56,6 +66,8 @@ namespace SEIIIAssignment.Controllers
             ViewData["CategoryName"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
             ViewData["ClassificationName"] =
                 new SelectList(_context.Classifications, "ClassificationId", "ClassificationName");
+            ViewData["BoughtbyId"] = new SelectList(_context.Users, "UserId", "Name");
+            ViewData["PostedbyId"] = new SelectList(_context.Users, "UserId", "Name");
             return View();
         }
 
@@ -64,7 +76,12 @@ namespace SEIIIAssignment.Controllers
         public async Task<IActionResult> Create(
             [Bind(
                 "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Type,ProductName,CategoryName,ClassificationId")]
-            Item item)
+            Item item,
+            [Bind("AuctionId,StartDate,EndDate,IsActive,PostedbyId,SellingAmount")] Auction auction,
+            [Bind(
+                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Type,ProductName,CategoryName,ClassificationId) itemAuctionViewModel,AuctionId,StartDate,EndDate,IsActive,PostedbyId,SellingAmount")] ItemAuctionViewModel itemAuctionViewModel)
+
+
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +107,10 @@ namespace SEIIIAssignment.Controllers
                 }
 
                 _context.Add(item);
-
+                await _context.SaveChangesAsync();
+                auction.ItemId = item.ItemId;
+                auction.CreatedAt = item.CreatedAt;
+                _context.Add(auction);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -99,7 +119,7 @@ namespace SEIIIAssignment.Controllers
                 new SelectList(_context.Categories, "CategoryId", "CategoryName", item.CategoryId);
             ViewData["ClassificationName"] = new SelectList(_context.Classifications, "ClassificationId",
                 "ClassificationId", item.ClassificationId);
-            return View(item);
+            return View(itemAuctionViewModel);
         }
 
         // GET: Items/Edit/5
@@ -194,7 +214,22 @@ namespace SEIIIAssignment.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        //
+        // [HttpPost]
+        // public async Task<IActionResult> SearchProduct(string searchString )
+        // {
+        //    
+        //
+        //
+        //         if (!String.IsNullOrEmpty(searchString))
+        //         {
+        //             items = items.Where(i => i.ProductName.Contains(searchString) ||
+        //                                      i.Type.Contains(searchString) ||i.Category.CategoryName.Contains(searchString)||i.Classification.ClassificationName.Contains(searchString));
+        //         }
+        //
+        //         return Redirect(await items.ToListAsync());
+        //
+        // }
         private bool ItemExists(int id)
         {
             return _context.Items.Any(e => e.ItemId == id);

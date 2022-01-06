@@ -1,4 +1,4 @@
-﻿@model SEIIIAssignment.Models.Item
+﻿@model SEIIIAssignment.Models.ItemAuctionViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -29,7 +29,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
-                <input type="file"  asp-for="Image" accept="image/*" class="form-control"/>
+                <input type="file" asp-for="Image" accept="image/*" class="form-control"/>
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -95,6 +95,40 @@
                 <label asp-for="ClassificationId" class="control-label"></label>
                 <select asp-for="ClassificationId" class="form-control" asp-items="ViewBag.ClassificationName"></select>
             </div>
+
+            <div>
+                <label asp-for="StartDate" class="control-label"></label>
+
+                <input asp-for="StartDate" class="form-control"/>
+                @* @Html.TextBox("DeliveredDate", , "{0:MM/dd/yyyy}", new { type = "date" }) *@
+                <input class="form-control col-sm-5" onchange="SetTime(this.value)" asp-for="StartDate" type="date" value="@DateTime.Today.ToString("dd-MM-yyyy")"/>
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control"/>
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsActive" class="control-label"></label>
+                <input asp-for="IsActive" class="form-control"/>
+                <span asp-validation-for="IsActive" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedAt" class="control-label"></label>
+                <input asp-for="CreatedAt" class="form-control"/>
+                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            </div>
+            @* <div class="form-group"> *@
+            @*     <label asp-for="PostedbyId" class="control-label"></label> *@
+            @*     <select asp-for="PostedbyId" class="form-control" asp-items="ViewBag.PostedbyId"></select> *@
+            @* </div> *@
+
+            <div class="form-group">
+                <label asp-for="SellingAmount" class="control-label"></label>
+                <input asp-for="SellingAmount" class="form-control"/>
+                <span asp-validation-for="SellingAmount" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary"/>
             </div>
@@ -107,5 +141,12 @@
 </div>
 
 @section Scripts {
+
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
+
+<script>   
+    function SetTime(value) {
+        window.location.href = "Controller/Action?Date=" + value;
+    }
+</script>

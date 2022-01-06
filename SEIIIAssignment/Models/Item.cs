@@ -7,6 +7,11 @@ namespace SEIIIAssignment.Models
 {
     public partial class Item
     {
+        public Item()
+        {
+            Auctions = new HashSet<Auction>();
+        }
+
         public int ItemId { get; set; }
         public int? ProducedYear { get; set; }
         public string TextualDescription { get; set; }
@@ -27,5 +32,6 @@ namespace SEIIIAssignment.Models
 
         public virtual Category Category { get; set; }
         public virtual Classification Classification { get; set; }
+        public virtual ICollection<Auction> Auctions { get; set; }
     }
 }
