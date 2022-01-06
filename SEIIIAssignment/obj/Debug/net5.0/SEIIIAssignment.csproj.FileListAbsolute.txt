@@ -195,3 +195,4 @@ D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Users
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Users\Edit.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Users\Index.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Users\Login.cshtml.g.cs
+D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Users\Register.cshtml.g.cs
