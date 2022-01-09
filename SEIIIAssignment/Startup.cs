@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using SEIIIAssignment.Models;
 
 namespace SEIIIAssignment
@@ -30,15 +35,33 @@ namespace SEIIIAssignment
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DevConnection"));
             });
+            services.Configure<CookiePolicyOptions>(options =>
+                {
+                    options.CheckConsentNeeded = context => false;
+                    options.MinimumSameSitePolicy = SameSiteMode.None;
+                }
+            ); 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddHangfire(options =>
             {
                 options.UseSqlServerStorage(Configuration.GetConnectionString("DevConnection"));
             });
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddDistributedMemoryCache(); 
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });     
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Account/Login";
+                options.LogoutPath = $"Account/Logout";
+                options.AccessDeniedPath = $"Account/AccessDenied";
             });
-
             services.AddControllersWithViews();
+          
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,22 +77,25 @@ namespace SEIIIAssignment
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
-            app.UseHttpsRedirection();
-            app.UseSession();
             app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
+            app.UseHttpsRedirection();
+            
+       
+            app.UseCookiePolicy();
+            app.UseAuthentication();
+            
             app.UseHangfireDashboard();
-            app.UseHangfireServer();
+            
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseHangfireServer();
         }
     }
 }

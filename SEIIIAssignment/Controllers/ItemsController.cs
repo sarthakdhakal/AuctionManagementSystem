@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc;
 using SEIIIAssignment.Models;
 
 namespace SEIIIAssignment.Controllers
@@ -24,18 +28,25 @@ namespace SEIIIAssignment.Controllers
             _environment = environment;
         }
 
+        [Authorize(Roles = "Admin,Client")]
         // GET: Items
-        public async Task<IActionResult> Index(string? searchString)
+        public async Task<IActionResult> Index(string searchString)
         {
+            ViewBag.Message = TempData["Message"];
             ViewData["ItemDetails"] = searchString;
+         
             var items = from i in _context.Items
                 select i;
             if (!String.IsNullOrEmpty(searchString))
             {
                 items = items.Where(i => i.ProductName.Contains(searchString) ||
-                                         i.Type.Contains(searchString) ||i.Category.CategoryName.Contains(searchString)||i.Classification.ClassificationName.Contains(searchString)).Include(i => i.Category).Include(i => i.Classification);;
+                                         i.Weight.ToString().Contains(searchString) ||
+                                         i.Category.CategoryName.Contains(searchString) ||
+                                         i.Classification.ClassificationName.Contains(searchString)||i.Artist.Contains(searchString)||i.EstimatedAmount.ToString().Contains(searchString)||i.StartDate.ToString().Contains(searchString))
+            .Include(i => i.Category).Include(i => i.Classification);
                 return View(await items.AsNoTracking().ToListAsync());
             }
+
             var SEIIIContext = _context.Items.Include(i => i.Category).Include(i => i.Classification);
             return View(await SEIIIContext.ToListAsync());
         }
@@ -49,9 +60,12 @@ namespace SEIIIAssignment.Controllers
             }
 
             var item = await _context.Items
-                .Include(i => i.Category)
                 .Include(i => i.Classification)
-                .FirstOrDefaultAsync(m => m.ItemId == id);
+                .Include(i => i.Category).FirstOrDefaultAsync(i => i.ItemId == id);
+            // ViewBag.Auctions =  _context.Auctions.Include(a=>a.Bids).ThenInclude(b=>b.Bidder).Include(a=>a.Bids).ThenInclude(b=>b.Amount).Where(i => i.ItemId==id);
+            ViewBag.Message = HttpContext.Session.GetString("Name");
+                
+        
             if (item == null)
             {
                 return NotFound();
@@ -61,6 +75,7 @@ namespace SEIIIAssignment.Controllers
         }
 
         // GET: Items/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["CategoryName"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
@@ -75,11 +90,8 @@ namespace SEIIIAssignment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind(
-                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Type,ProductName,CategoryName,ClassificationId")]
-            Item item,
-            [Bind("AuctionId,StartDate,EndDate,IsActive,PostedbyId,SellingAmount")] Auction auction,
-            [Bind(
-                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Type,ProductName,CategoryName,ClassificationId) itemAuctionViewModel,AuctionId,StartDate,EndDate,IsActive,PostedbyId,SellingAmount")] ItemAuctionViewModel itemAuctionViewModel)
+                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Width,ProductName,CategoryName,ClassificationName,StartDate,EstimatedAmount")]
+            Item item)
 
 
         {
@@ -95,22 +107,22 @@ namespace SEIIIAssignment.Controllers
 
                         if (file.Length > 0)
                         {
-                            var fileName = Guid.NewGuid().ToString().Replace("-", "") +
+                            var fileName =  Guid.NewGuid().ToString().Replace("-", "") +
                                            Path.GetExtension(file.FileName);
+                           
                             using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
                             {
                                 await file.CopyToAsync(fileStream);
-                                item.Image = file.FileName;
+                                
                             }
+                            item.Image = fileName;
+                            
                         }
                     }
                 }
 
+                item.CreatedAt = DateTime.Now;
                 _context.Add(item);
-                await _context.SaveChangesAsync();
-                auction.ItemId = item.ItemId;
-                auction.CreatedAt = item.CreatedAt;
-                _context.Add(auction);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -118,8 +130,8 @@ namespace SEIIIAssignment.Controllers
             ViewData["CategoryName"] =
                 new SelectList(_context.Categories, "CategoryId", "CategoryName", item.CategoryId);
             ViewData["ClassificationName"] = new SelectList(_context.Classifications, "ClassificationId",
-                "ClassificationId", item.ClassificationId);
-            return View(itemAuctionViewModel);
+                "ClassificationName", item.ClassificationId);
+            return View(item);
         }
 
         // GET: Items/Edit/5
@@ -147,7 +159,7 @@ namespace SEIIIAssignment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
             [Bind(
-                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Type,ProductName,CategoryId,ClassificationId")]
+                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Width,ProductName,CategoryName,ClassificationName,StartDate,EstimatedAmount")]
             Item item)
         {
             if (id != item.ItemId)
@@ -214,6 +226,7 @@ namespace SEIIIAssignment.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
         //
         // [HttpPost]
         // public async Task<IActionResult> SearchProduct(string searchString )

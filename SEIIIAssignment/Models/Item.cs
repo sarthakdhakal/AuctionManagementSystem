@@ -9,7 +9,7 @@ namespace SEIIIAssignment.Models
     {
         public Item()
         {
-            Auctions = new HashSet<Auction>();
+            Bids = new HashSet<Bid>();
         }
 
         public int ItemId { get; set; }
@@ -23,15 +23,26 @@ namespace SEIIIAssignment.Models
         public double? Height { get; set; }
         public double? Length { get; set; }
         public string Medium { get; set; }
-        public bool? IsFramed { get; set; }
-        public string Type { get; set; }
+        public int? IsFramed { get; set; }
+        public int? Width { get; set; }
         public string ProductName { get; set; }
         public int? CategoryId { get; set; }
         public int? ClassificationId { get; set; }
         public string Image { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int? IsActive { get; set; }
+        public int? PostedbyId { get; set; }
+        public int? BoughtbyId { get; set; }
+        public double? SellingAmount { get; set; }
+        public double? EstimatedAmount { get; set; }
+        public int? ArchiveStatus { get; set; }
+        public string ImageType { get; set; }
 
+        public virtual User Boughtby { get; set; }
         public virtual Category Category { get; set; }
         public virtual Classification Classification { get; set; }
-        public virtual ICollection<Auction> Auctions { get; set; }
+        public virtual User Postedby { get; set; }
+        public virtual ICollection<Bid> Bids { get; set; }
     }
 }

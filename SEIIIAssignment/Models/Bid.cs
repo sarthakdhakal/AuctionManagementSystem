@@ -10,10 +10,10 @@ namespace SEIIIAssignment.Models
         public int BidId { get; set; }
         public DateTime? CreatedAt { get; set; }
         public int? BidderId { get; set; }
-        public int? AuctionId { get; set; }
+        public int? ItemId { get; set; }
         public double? Amount { get; set; }
 
-        public virtual Auction Auction { get; set; }
         public virtual User Bidder { get; set; }
+        public virtual Item Item { get; set; }
     }
 }

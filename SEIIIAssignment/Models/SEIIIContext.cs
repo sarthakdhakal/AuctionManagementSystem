@@ -18,7 +18,6 @@ namespace SEIIIAssignment.Models
         }
 
         public virtual DbSet<AggregatedCounter> AggregatedCounters { get; set; }
-        public virtual DbSet<Auction> Auctions { get; set; }
         public virtual DbSet<Bid> Bids { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Classification> Classifications { get; set; }
@@ -62,47 +61,21 @@ namespace SEIIIAssignment.Models
                 entity.Property(e => e.ExpireAt).HasColumnType("datetime");
             });
 
-            modelBuilder.Entity<Auction>(entity =>
-            {
-                entity.ToTable("Auction");
-
-                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-
-                entity.Property(e => e.EndDate).HasColumnType("datetime");
-
-                entity.Property(e => e.StartDate).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Boughtby)
-                    .WithMany(p => p.AuctionBoughtbies)
-                    .HasForeignKey(d => d.BoughtbyId)
-                    .HasConstraintName("FK_Auction_User");
-
-                entity.HasOne(d => d.Item)
-                    .WithMany(p => p.Auctions)
-                    .HasForeignKey(d => d.ItemId)
-                    .HasConstraintName("FK_Auction_Item");
-
-                entity.HasOne(d => d.Postedby)
-                    .WithMany(p => p.AuctionPostedbies)
-                    .HasForeignKey(d => d.PostedbyId)
-                    .HasConstraintName("FK_Auction_User1");
-            });
-
             modelBuilder.Entity<Bid>(entity =>
             {
                 entity.ToTable("Bid");
 
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
-                entity.HasOne(d => d.Auction)
-                    .WithMany(p => p.Bids)
-                    .HasForeignKey(d => d.AuctionId)
-                    .HasConstraintName("FK_Bid_Auction");
-
                 entity.HasOne(d => d.Bidder)
                     .WithMany(p => p.Bids)
                     .HasForeignKey(d => d.BidderId)
                     .HasConstraintName("FK_Bid_User");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany(p => p.Bids)
+                    .HasForeignKey(d => d.ItemId)
+                    .HasConstraintName("FK_Bid_Item");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -162,8 +135,14 @@ namespace SEIIIAssignment.Models
 
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
                 entity.Property(e => e.Image)
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ImageType)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ItemType)
@@ -183,11 +162,14 @@ namespace SEIIIAssignment.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+
                 entity.Property(e => e.TextualDescription).HasColumnType("text");
 
-                entity.Property(e => e.Type)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.HasOne(d => d.Boughtby)
+                    .WithMany(p => p.ItemBoughtbies)
+                    .HasForeignKey(d => d.BoughtbyId)
+                    .HasConstraintName("FK_Item_User1");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Items)
@@ -198,6 +180,11 @@ namespace SEIIIAssignment.Models
                     .WithMany(p => p.Items)
                     .HasForeignKey(d => d.ClassificationId)
                     .HasConstraintName("FK_Item_Classification");
+
+                entity.HasOne(d => d.Postedby)
+                    .WithMany(p => p.ItemPostedbies)
+                    .HasForeignKey(d => d.PostedbyId)
+                    .HasConstraintName("FK_Item_User");
             });
 
             modelBuilder.Entity<Job>(entity =>

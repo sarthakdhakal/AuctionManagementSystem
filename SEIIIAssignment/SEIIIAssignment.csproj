@@ -8,6 +8,8 @@
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
       <PackageReference Include="Hangfire.AspNetCore" Version="1.8.0-beta4" />
       <PackageReference Include="Hangfire.SqlServer" Version="1.8.0-beta4" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.12" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.12" />
       <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.12" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="5.0.13" />
@@ -22,6 +24,26 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Users\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Users\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Users\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Users\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Users\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Users\Login.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Users\Register.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Auctions\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Auctions\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Auctions\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Auctions\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Auctions\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Bids\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Bids\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Bids\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Bids\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Bids\Index.cshtml" />
     </ItemGroup>
 
 </Project>

@@ -1,114 +1,241 @@
-﻿@model SEIIIAssignment.Models.Item
+﻿@using System.Net.Http
+@using Microsoft.AspNetCore.Http
+@model SEIIIAssignment.Models.Item
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Details-"+@Model.ProductName;
+
+
 }
 
 <h1>Details</h1>
+<section class="bg-light">
+<div class="container pb-5">
+<div class="row">
+<div class="col-lg-5 mt-5">
+    <div class="card mb-3">
+        <img class="card-img img-fluid" src="~/uploads/img/products/@Model.Image" alt="Image of: @Html.DisplayFor(model => model.ProductName)" id="product-detail">
+    </div>
+
+</div>
+<!-- col end -->
+<div class="col-lg-7 mt-5">
+<div class="card">
+<div class="card-body">
+<h1 class="h2">Item Name: @Html.DisplayFor(model => model.ProductName) </h1>
+<p class="py-2">Produced year: @Html.DisplayFor(model => model.ProducedYear)</p>
+<p class="py-2">Auction Added by: @Html.DisplayFor(model => model.Postedby.Name)</p>
+<p class="py-2">Estimated Amount: @Html.DisplayFor(model => model.EstimatedAmount)</p>
+
+<h6>Description:</h6>
+<p> @Html.DisplayFor(model => model.TextualDescription)</p>
+<ul class="list-inline">
+    <li class="list-inline-item">
+        <h6>Artist:</h6>
+    </li>
+    <li class="list-inline-item">
+        <p class="text-muted">
+            <strong>@Html.DisplayFor(model => model.Artist)</strong>
+        </p>
+    </li>
+</ul>
+<ul class="list-inline">
+    <li class="list-inline-item">
+        <h6>Category:</h6>
+    </li>
+    <li class="list-inline-item">
+        <p class="text-muted">
+            <strong>@Html.DisplayFor(model => model.Category.CategoryName)</strong>
+        </p>
+    </li>
+</ul>
+<ul class="list-inline">
+    <li class="list-inline-item">
+        <h6>Classification:</h6>
+    </li>
+    <li class="list-inline-item">
+        <p class="text-muted">
+            <strong>@Html.DisplayFor(model => model.Classification.ClassificationName)</strong>
+        </p>
+    </li>
+</ul>
+
+@if (Model.Category.CategoryName is "Drawings" or "Paintings")
+{
+    <ul class="list-inline">
+        <li class="list-inline-item">
+            <h6>Medium Used:</h6>
+        </li>
+        <li class="list-inline-item">
+            <p class="text-muted">
+                <strong>@Html.DisplayFor(model => model.Medium)</strong>
+            </p>
+        </li>
+    </ul>
+    <ul class="list-inline">
+        <li class="list-inline-item">
+            <h6>Framed:</h6>
+        </li>
+        <li class="list-inline-item">
+            <p class="text-muted">
+                @if (Model.IsFramed == 0)
+                {
+                    <strong>No</strong>
+                }
+                else if (Model.IsFramed == 1)
+                {
+                    <strong>Yes</strong>
+                }
+                else
+                {
+                    <strong>Unknown</strong>
+                }
+            </p>
+        </li>
+    </ul>
+}
+else if (Model.Category.CategoryName is "Sculptures" or "Carvings")
+{
+    <ul class="list-inline">
+        <li class="list-inline-item">
+            <h6>Material used:</h6>
+        </li>
+        <li class="list-inline-item">
+            <p class="text-muted">
+                <strong>@Html.DisplayFor(model => model.Material)</strong>
+            </p>
+        </li>
+    </ul>
+    <ul class="list-inline">
+        <li class="list-inline-item">
+            <h6>Weight:</h6>
+        </li>
+        <li class="list-inline-item">
+            <p class="text-muted">
+                <strong>@Html.DisplayFor(model => model.Weight)</strong>
+            </p>
+        </li>
+    </ul>
+    <ul class="list-inline">
+        <li class="list-inline-item">
+            <h6>Width:</h6>
+        </li>
+        <li class="list-inline-item">
+            <p class="text-muted">
+                <strong>@Html.DisplayFor(model => model.Width)</strong>
+            </p>
+        </li>
+    </ul>
+}
+
+else if (Model.Category.CategoryName is "Photographic Images")
+{
+    <ul class="list-inline">
+        <li class="list-inline-item">
+            <h6>Type of Image :</h6>
+        </li>
+        <li class="list-inline-item">
+            <p class="text-muted">
+                <strong>@Html.DisplayFor(model => model.ImageType)</strong>
+            </p>
+        </li>
+    </ul>
+}
+<ul class="list-inline">
+    <li class="list-inline-item">
+        <h6>Height:</h6>
+    </li>
+    <li class="list-inline-item">
+        <p class="text-muted">
+            <strong>@Html.DisplayFor(model => model.Height)</strong>
+        </p>
+    </li>
+</ul>
+<ul class="list-inline">
+    <li class="list-inline-item">
+        <h6>Length :</h6>
+    </li>
+    <li class="list-inline-item">
+        <p class="text-muted">
+            <strong>@Html.DisplayFor(model => model.Length)</strong>
+        </p>
+    </li>
+</ul>
+<ul class="list-inline">
+    <li class="list-inline-item">
+        <h6>Auction Date :</h6>
+    </li>
+    <li class="list-inline-item">
+        <p class="text-muted">
+            <strong>@Html.DisplayFor(model => model.StartDate)</strong>
+        </p>
+    </li>
+</ul>
+
+
+@* <form action="" method="GET"> *@
+@*     <input type="hidden" name="product-title" value="Activewear"> *@
+@*     <div class="row"> *@
+@*         <div class="col-auto"> *@
+@*             <ul class="list-inline pb-3"> *@
+@*                 <li class="list-inline-item"> *@
+@*                     Size : *@
+@*                     <input type="hidden" name="product-size" id="product-size" value="S"> *@
+@*                 </li> *@
+@*                 <li class="list-inline-item"> *@
+@*                     <span class="btn btn-success btn-size">S</span> *@
+@*                 </li> *@
+@*                 <li class="list-inline-item"> *@
+@*                     <span class="btn btn-success btn-size">M</span> *@
+@*                 </li> *@
+@*                 <li class="list-inline-item"> *@
+@*                     <span class="btn btn-success btn-size">L</span> *@
+@*                 </li> *@
+@*                 <li class="list-inline-item"> *@
+@*                     <span class="btn btn-success btn-size">XL</span> *@
+@*                 </li> *@
+@*             </ul> *@
+@*         </div> *@
+@*         <div class="col-auto"> *@
+@*             <ul class="list-inline pb-3"> *@
+@*                 <li class="list-inline-item text-right"> *@
+@*                     Quantity *@
+@*                     <input type="hidden" name="product-quanity" id="product-quanity" value="1"> *@
+@*                 </li> *@
+@*                 <li class="list-inline-item"> *@
+@*                     <span class="btn btn-success" id="btn-minus">-</span> *@
+@*                 </li> *@
+@*                 <li class="list-inline-item"> *@
+@*                     <span class="badge bg-secondary" id="var-value">1</span> *@
+@*                 </li> *@
+@*                 <li class="list-inline-item"> *@
+@*                     <span class="btn btn-success" id="btn-plus">+</span> *@
+@*                 </li> *@
+@*             </ul> *@
+@*         </div> *@
+@*     </div> *@
+@*     <div class="row pb-3"> *@
+@*         <div class="col d-grid"> *@
+@*             <button type="submit" class="btn btn-success btn-lg" name="submit" value="buy">Buy</button> *@
+@*         </div> *@
+@*         <div class="col d-grid"> *@
+@*             <button type="submit" class="btn btn-success btn-lg" name="submit" value="addtocard">Add To Cart</button> *@
+@*         </div> *@
+@*     </div> *@
+@* </form> *@
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
 
 <div>
-    <h4>Item</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProducedYear)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProducedYear)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TextualDescription)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TextualDescription)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Image)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Image)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Artist)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Artist)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ItemType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ItemType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Material)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Material)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Weight)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Weight)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Height)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Height)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Length)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Length)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Medium)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Medium)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsFramed)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsFramed)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.CategoryId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Classification)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Classification.ClassificationId)
-        </dd>
-    </dl>
-</div>
-<div>
+   
     <a asp-action="Edit" asp-route-id="@Model.ItemId">Edit</a> |
     <a asp-action="Index">Back to List</a>
+  
+    <a asp-controller="Account" asp-action="Logout">Back to List</a>
 </div>
