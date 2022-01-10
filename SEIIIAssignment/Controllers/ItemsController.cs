@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -39,7 +40,7 @@ namespace SEIIIAssignment.Controllers
                 select i;
             if (!String.IsNullOrEmpty(searchString))
             {
-                items = items.Where(i => i.ProductName.Contains(searchString) ||
+                items = items.Where(i=>i.ArchiveStatus==0 && i.ProductName.Contains(searchString) ||
                                          i.Weight.ToString().Contains(searchString) ||
                                          i.Category.CategoryName.Contains(searchString) ||
                                          i.Classification.ClassificationName.Contains(searchString)||i.Artist.Contains(searchString)||i.EstimatedAmount.ToString().Contains(searchString)||i.StartDate.ToString().Contains(searchString))
@@ -47,13 +48,14 @@ namespace SEIIIAssignment.Controllers
                 return View(await items.AsNoTracking().ToListAsync());
             }
 
-            var SEIIIContext = _context.Items.Include(i => i.Category).Include(i => i.Classification);
+            var SEIIIContext = _context.Items.Where(i=>i.ArchiveStatus==0).Include(i => i.Category).Include(i => i.Classification);
             return View(await SEIIIContext.ToListAsync());
         }
 
         // GET: Items/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ViewBag.Message = TempData["Message"];
             if (id == null)
             {
                 return NotFound();
@@ -61,9 +63,9 @@ namespace SEIIIAssignment.Controllers
 
             var item = await _context.Items
                 .Include(i => i.Classification)
-                .Include(i => i.Category).FirstOrDefaultAsync(i => i.ItemId == id);
+                .Include(i => i.Category).Include(i=>i.Boughtby).Include(i=>i.Postedby).FirstOrDefaultAsync(i => i.ItemId == id);
             // ViewBag.Auctions =  _context.Auctions.Include(a=>a.Bids).ThenInclude(b=>b.Bidder).Include(a=>a.Bids).ThenInclude(b=>b.Amount).Where(i => i.ItemId==id);
-            ViewBag.Message = HttpContext.Session.GetString("Name");
+            ViewBag.Bids = _context.Bids.Where(b => b.ItemId == id).Include(b=>b.Bidder);
                 
         
             if (item == null)
@@ -75,7 +77,7 @@ namespace SEIIIAssignment.Controllers
         }
 
         // GET: Items/Create
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Client")]
         public IActionResult Create()
         {
             ViewData["CategoryName"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
@@ -85,18 +87,20 @@ namespace SEIIIAssignment.Controllers
             ViewData["PostedbyId"] = new SelectList(_context.Users, "UserId", "Name");
             return View();
         }
-
+        [Authorize(Roles = "Admin,Client")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind(
-                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Width,ProductName,CategoryName,ClassificationName,StartDate,EstimatedAmount")]
+                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Width,ProductName,CategoryId,ClassificationId,StartDate,EstimatedAmount")]
             Item item)
 
 
         {
             if (ModelState.IsValid)
-            {
+            { 
+                var userId = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
+                var sellerId = Int32.Parse(userId);
                 var files = HttpContext.Request.Form.Files;
                 foreach (var image in files)
                 {
@@ -121,7 +125,11 @@ namespace SEIIIAssignment.Controllers
                     }
                 }
 
+                DateTime date = (DateTime) item.StartDate;
+                item.EndDate = date.AddMinutes(1436);
                 item.CreatedAt = DateTime.Now;
+                item.PostedbyId = sellerId;
+                item.ArchiveStatus = 0;
                 _context.Add(item);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -135,6 +143,7 @@ namespace SEIIIAssignment.Controllers
         }
 
         // GET: Items/Edit/5
+        [Authorize(Roles = "Admin,Client")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -151,7 +160,7 @@ namespace SEIIIAssignment.Controllers
             ViewData["CategoryName"] = new SelectList(_context.Categories, "CategoryId", "CategoryName",
                 item.Category.CategoryName);
             ViewData["ClassificationName"] = new SelectList(_context.Classifications, "ClassificationId",
-                "ClassificationId", item.ClassificationId);
+                "ClassificationName", item.ClassificationId);
             return View(item);
         }
 
@@ -159,7 +168,7 @@ namespace SEIIIAssignment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
             [Bind(
-                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Width,ProductName,CategoryName,ClassificationName,StartDate,EstimatedAmount")]
+                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Width,ProductName,CategoryId,ClassificationId,StartDate,EstimatedAmount")]
             Item item)
         {
             if (id != item.ItemId)
@@ -171,6 +180,9 @@ namespace SEIIIAssignment.Controllers
             {
                 try
                 {
+                    DateTime date = (DateTime) item.StartDate;
+                    item.EndDate = date.AddMinutes(1436);
+                 
                     _context.Update(item);
                     await _context.SaveChangesAsync();
                 }
@@ -197,6 +209,10 @@ namespace SEIIIAssignment.Controllers
         }
 
         // GET: Items/Delete/5
+
+        [Authorize(Roles = "Admin,Client")]
+        // POST: Items/Delete/5
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -204,45 +220,38 @@ namespace SEIIIAssignment.Controllers
                 return NotFound();
             }
 
-            var item = await _context.Items
-                .Include(i => i.Category)
-                .Include(i => i.Classification)
-                .FirstOrDefaultAsync(m => m.ItemId == id);
+            var item = await _context.Items.FindAsync(id);
             if (item == null)
             {
                 return NotFound();
             }
 
-            return View(item);
-        }
-
-        // POST: Items/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var item = await _context.Items.FindAsync(id);
             _context.Items.Remove(item);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+       
 
-        //
-        // [HttpPost]
-        // public async Task<IActionResult> SearchProduct(string searchString )
-        // {
-        //    
-        //
-        //
-        //         if (!String.IsNullOrEmpty(searchString))
-        //         {
-        //             items = items.Where(i => i.ProductName.Contains(searchString) ||
-        //                                      i.Type.Contains(searchString) ||i.Category.CategoryName.Contains(searchString)||i.Classification.ClassificationName.Contains(searchString));
-        //         }
-        //
-        //         return Redirect(await items.ToListAsync());
-        //
-        // }
+        public async Task<IActionResult> Archive(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var itemData = await _context.Items.FindAsync(id);
+            itemData.ArchiveStatus = 1;
+            if (itemData == null)
+            {
+                return NotFound();
+            }
+
+            _context.Update(itemData);
+            await _context.SaveChangesAsync();
+   
+            return RedirectToAction(nameof(Index));
+        }
+     
         private bool ItemExists(int id)
         {
             return _context.Items.Any(e => e.ItemId == id);

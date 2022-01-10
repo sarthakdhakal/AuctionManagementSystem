@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
-
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SEIIIAssignment.Models;
 using BC = BCrypt.Net.BCrypt;
@@ -50,11 +48,20 @@ namespace SEIIIAssignment.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
-            // if (User.Identity.Role)
-            // {
-            //     
-            // }
+       
             return View();
+        }
+        [Authorize(Roles = "Admin,Client")]
+        public IActionResult Dashboard()
+        {
+            var userId = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
+            var id = Int32.Parse(userId);
+            var user =  _context.Users
+                .FirstOrDefault(m => m.UserId == id);
+            ViewBag.BoughtItems = _context.Items.Where(i => i.BoughtbyId == id).ToList();
+            ViewBag.SoldItems = _context.Items.Where(i => i.PostedbyId == id).ToList();
+            
+            return View(user);
         }
 
         // POST: Users/Create
@@ -96,9 +103,6 @@ namespace SEIIIAssignment.Controllers
             return View(user);
         }
 
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -142,24 +146,11 @@ namespace SEIIIAssignment.Controllers
             {
                 return NotFound();
             }
-
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
+            var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
-
-            return View(user);
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -193,7 +184,8 @@ namespace SEIIIAssignment.Controllers
             {
                 identity = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, username),
+                    new Claim(ClaimTypes.Name, username), 
+                    new Claim(ClaimTypes.Sid, userData.UserId.ToString()),
                     new Claim(ClaimTypes.Role, "Admin"),
                     new Claim(ClaimTypes.GivenName,userData.Name)
                    
@@ -207,7 +199,10 @@ namespace SEIIIAssignment.Controllers
                 identity = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, username),
+                    new Claim(ClaimTypes.Sid, userData.UserId.ToString()),
+                    new Claim(ClaimTypes.GivenName,userData.Name),
                     new Claim(ClaimTypes.Role, "Client")
+                 
 
                 }, CookieAuthenticationDefaults.AuthenticationScheme);
                 isAuthenticate = true;
@@ -220,6 +215,7 @@ namespace SEIIIAssignment.Controllers
                 HttpContext.Session.SetString("Name", userData.Name);
 
                 HttpContext.Session.SetString("Role", userData.Role);
+                
                 return RedirectToAction("Index", "Items");
             }
 

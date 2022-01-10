@@ -131,23 +131,12 @@ namespace SEIIIAssignment.Controllers
                 return NotFound();
             }
 
-            var classification = await _context.Classifications
-                .FirstOrDefaultAsync(m => m.ClassificationId == id);
-            if (classification == null)
+         
+            var classification = await _context.Classifications.FindAsync(id);
+            if (classification== null)
             {
                 return NotFound();
             }
-
-            return View(classification);
-        }
-
-        // POST: Classifications/Delete/5
-        [Authorize(Roles = "Admin")]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var classification = await _context.Classifications.FindAsync(id);
             _context.Classifications.Remove(classification);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

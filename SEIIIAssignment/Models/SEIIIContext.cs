@@ -145,10 +145,6 @@ namespace SEIIIAssignment.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ItemType)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Material)
                     .HasMaxLength(50)
                     .IsUnicode(false);

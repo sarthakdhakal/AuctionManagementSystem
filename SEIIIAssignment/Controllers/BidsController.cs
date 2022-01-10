@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,45 +19,47 @@ namespace SEIIIAssignment.Controllers
             _context = context;
         }
 
-        // GET: Bids
-       
-
-        // GET: Bids/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var bid = await _context.Bids
-                .Include(b => b.Bidder)
-                .Include(b => b.Item)
-                .FirstOrDefaultAsync(m => m.BidId == id);
-            if (bid == null)
-            {
-                return NotFound();
-            }
-
-            return View(bid);
-        }
-
-        // GET: Bids/Create
-      
-
-        // POST: Bids/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+     
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BidId,ItemId,Amount")] Bid bid)
+        public async Task<IActionResult> Create([Bind("ItemId","Amount")] Bid bid)
         {
             if (ModelState.IsValid)
             {
-                bid.CreatedAt = DateTime.Now;
-                _context.Add(bid);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Items", new {id = bid.ItemId});
+                List<Bid> bids = _context.Bids.Where(b => b.ItemId == bid.ItemId).ToList();
+                var sellingAmount = _context.Items.Where(b => b.ItemId == bid.ItemId).Select(b=>b.SellingAmount).ToList().LastOrDefault();
+                if (bids.Count>0)
+                {
+                    foreach (var bidData in bids)
+                    {
+                        if (bid.Amount> bidData.Amount || bid.Amount<=sellingAmount)
+                        {
+                            var userId = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
+                            bid.BidderId = Int32.Parse(userId);
+                            bid.CreatedAt = DateTime.Now;
+                            _context.Add(bid);
+                            await _context.SaveChangesAsync();
+                            return RedirectToAction("Details", "Items", new {id = bid.ItemId});
+                        }
+                        else
+                        {
+                            TempData["Message"] = "The bid amount is less than the previous bid";
+                            return RedirectToAction("Details", "Items", new {id = bid.ItemId});
+                        }
+                }
+            
+                }
+                else
+                {
+                    var userId = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
+                    bid.BidderId = Int32.Parse(userId);
+                    bid.CreatedAt = DateTime.Now;
+                    _context.Add(bid);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Details", "Items", new {id = bid.ItemId});
+                }
+              
+               
             }
 
             return View(bid);

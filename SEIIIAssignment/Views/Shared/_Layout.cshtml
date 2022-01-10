@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -11,20 +12,47 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Fotheby's Auction House</a>
+            <a class="navbar-brand" asp-area="" asp-controller="Items" asp-action="Index">Fotheby's Auction House</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
+           
+                 @if (User.Identity.IsAuthenticated)
+                {
+                    <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Items" asp-action="Index">Items</a>
                     </li>
+                        <li class="nav-item">
+                            <a asp-action="Dashboard" asp-controller="Account" class="nav-link text-dark">Dashboard</a>
+                        </li>
+                        @if (User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value == "Admin")
+                        {
+                            <li class="nav-item">
+                                <a asp-action="Index" asp-controller="Account" class="nav-link text-dark">Accounts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-action="Index" asp-controller="Categories" class="nav-link text-dark">Category</a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-action="Index" asp-controller="Classifications" class="nav-link text-dark">Classifications</a>
+                            </li>
+                        }
                 </ul>
+              
+                    <p class="ms-3 pt-3 pr-3">
+                        Hi, @User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value
+                    </p>
+                    <a asp-action="Logout" asp-controller="Account" class="btn btn-light ms-3">Logout</a>
+                }
+                else
+                {
+                  
+                    <a asp-action="Login" asp-controller="Account" class="btn btn-light ms-3">Login</a>
+                    <a asp-action="Register" asp-controller="Account" class="btn btn-light ms-3">Register</a>
+                }
             </div>
         </div>
     </nav>
@@ -37,7 +65,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2021 - SEIIIAssignment - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2022 - Fotheby's Auction House
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

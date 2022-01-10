@@ -1,12 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using System.Security.Claims
 @model IEnumerable<SEIIIAssignment.Models.Item>
-@inject IHttpContextAccessor HttpContextAccessor
+
 @{
     ViewData["Title"] = "Index";
 
+
 }
 
-<h1>Index </h1>
+
 <form method="get" asp-action="Index">
     <div class="input-group">
         <input class="form-control" name="searchString" value="@ViewData["ItemDetails"]">
@@ -18,124 +20,10 @@
     </div>
 </form>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-light">Create New</a>
 </p>
-@* <table class="table"> *@
-@*     <thead> *@
-@*     <tr> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.ProducedYear) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.TextualDescription) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.Image) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.CreatedAt) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.Artist) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.ItemType) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.Material) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.Weight) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.Height) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.Length) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.Medium) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.IsFramed) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.Type) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.ProductName) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.Category) *@
-@*         </th> *@
-@*         <th> *@
-@*             @Html.DisplayNameFor(model => model.Classification) *@
-@*         </th> *@
-@*         <th></th> *@
-@*     </tr> *@
-@*     </thead> *@
-@*     <tbody> *@
-@*     @foreach (var item in Model) *@
-@*     { *@
-@*         <tr> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.ProducedYear) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.TextualDescription) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Image) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.CreatedAt) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Artist) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.ItemType) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Material) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Weight) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Height) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Length) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Medium) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.IsFramed) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Type) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.ProductName) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Category.CategoryId) *@
-@*             </td> *@
-@*             <td> *@
-@*                 @Html.DisplayFor(modelItem => item.Classification.ClassificationId) *@
-@*             </td> *@
-@*             <td> *@
-@*                 <a asp-action="Edit" asp-route-id="@item.ItemId">Edit</a> | *@
-@*                 <a asp-action="Details" asp-route-id="@item.ItemId">Details</a> | *@
-@*                 <a asp-action="Delete" asp-route-id="@item.ItemId">Delete</a> *@
-@*             </td> *@
-@*         </tr> *@
-@*     } *@
-@*     </tbody> *@
-@* </table> *@
-<h1 class="h3 mb-3">Dashboard</h1>
+
+
 <div class="row ">
     <div class="col-12">
         <div class="card">
@@ -148,23 +36,34 @@
 
                 @foreach (var item in Model)
                 {
-                    <div class="col-12 col-md-6 col-lg-3">
+                    <div class="col-12 col-md-6 col-lg-4">
                         <div class="card">
                             <img class="card-img-top" src="~/uploads/img/products/@Html.DisplayFor(modelItem => item.Image)" alt="Item Image">
-                            <div class="card-header">
-                                <h5 class="term">Product Name: @Html.DisplayFor(modelItem => item.ProductName)</h5>
-                            </div>
                             <div class="card-body">
-                                <p>
-                                    Category: @Html.DisplayFor(modelItem => item.Category.CategoryName)
-                                </p>s
+                                <h4 class="card-title">
+                                    <a asp-action="Details" asp-route-id="@item.ItemId">Item Name: @Html.DisplayFor(modelItem => item.ProductName)</a>
+                                </h4>
+                                <p class="card-text"> Category: @Html.DisplayFor(modelItem => item.Category.CategoryName)</p>
                                 <p class="card-text"> Classification: @Html.DisplayFor(modelItem => item.Classification.ClassificationName)</p>
-                                <p>@if( Html.DisplayFor(modelItem=> item.StartDate))</p>
-                            </div>
+                                @if (DateTime.Now <= item.StartDate)
+                                {
+                                    <p class="card-text">Auction Not started</p>
+                                }
+                                else if (item.StartDate <= DateTime.Now && DateTime.Now <= item.EndDate)
+                                {
+                                    <p class="card-text">Active auction</p>
+                                }
+                                else if (DateTime.Now >= item.EndDate)
+                                {
+                                    <p class="card-text">Auction completed</p>
+                                }
 
-                        </div>
-                        <div class="d-grid gap-2">
-                            <a asp-action="Details" asp-route-id="@item.ItemId" class="btn btn-primary btn-md" type="button">Learn More</a>
+                                <div class="row justify-content-center">
+                                    <div class="col">
+                                        <a asp-action="Details" asp-route-id="@item.ItemId" class="btn btn-success btn-block">Details</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 }

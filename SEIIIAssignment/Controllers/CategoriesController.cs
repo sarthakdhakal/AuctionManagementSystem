@@ -129,22 +129,12 @@ namespace SEIIIAssignment.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.CategoryId == id);
-            if (category == null)
+      
+            var category = await _context.Categories.FindAsync(id);
+            if (category==null)
             {
                 return NotFound();
             }
-
-            return View(category);
-        }
-        [Authorize(Roles = "Admin")]
-        // POST: Categories/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var category = await _context.Categories.FindAsync(id);
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

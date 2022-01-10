@@ -29,23 +29,20 @@
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" type="datetime-local" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Artist" class="control-label"></label>
                 <input asp-for="Artist" class="form-control" />
                 <span asp-validation-for="Artist" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ItemType" class="control-label"></label>
-                <input asp-for="ItemType" class="form-control" />
-                <span asp-validation-for="ItemType" class="text-danger"></span>
-            </div>
+            
             <div class="form-group">
                 <label asp-for="Material" class="control-label"></label>
-                <input asp-for="Material" class="form-control" />
+                <input asp-for="Material" class="form-control" />+
+                `   */
                 <span asp-validation-for="Material" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -75,8 +72,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Width" class="control-label"></label>
-                <input asp-for="Width" class="form-control" />
-                <span asp-validation-for="Width" class="text-danger"></span>
+               <input asp-for="Width" class="form-control" />
+               <span asp-validation-for="Width" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ProductName" class="control-label"></label>

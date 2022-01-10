@@ -1,8 +1,18 @@
-﻿@model Bid
+﻿@model SEIIIAssignment.Models.Bid
 
-@{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
-}
+<form asp-action="Create" asp-controller="Bids" method="post">
+    <input type="hidden" asp-for="ItemId" value="@ViewData["ItemId"]">
+    <div class="row">
+        <div class="col-auto">
+                                    
+            <label class="control-label" asp-for="Amount">Bidding Amount</label>
+            <input asp-for="Amount"  class="form-control"/>
+            <div class="row pb-3">
 
-<h2>title</h2>
+                <div class="col d-grid">
+                    <button type="submit" class="btn btn-success btn-sm" name="submit" value="Create">Add Bid</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

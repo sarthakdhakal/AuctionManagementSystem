@@ -1,7 +1,56 @@
 ﻿@model SEIIIAssignment.Models.Item
 
 @{
+    DateTime dateTime = default;
+    string dateTime1 = null;
     ViewData["Title"] = "Create";
+    if (DateTime.Now.DayOfWeek ==(DayOfWeek) 1)
+    {
+        dateTime = DateTime.Now.AddDays(2);
+        Console.WriteLine(dateTime);
+    }
+    else if (DateTime.Now.DayOfWeek ==(DayOfWeek) 2)
+    {
+        dateTime = DateTime.Now.AddDays(2);
+        dateTime1 = dateTime.ToString("dd MMMM yyyy");
+        Console.WriteLine(dateTime);
+
+    }
+    else if (DateTime.Now.DayOfWeek ==(DayOfWeek) 3)
+    {
+       dateTime = DateTime.Now.AddDays(4);
+        Console.WriteLine(dateTime);
+
+    }
+    else if (DateTime.Now.DayOfWeek ==(DayOfWeek) 4)
+    {
+        dateTime = DateTime.Now.AddDays(3);
+        Console.WriteLine(dateTime);
+
+    }
+    else if (DateTime.Now.DayOfWeek ==(DayOfWeek) 5)
+    {
+         dateTime = DateTime.Now.AddDays(2);
+        Console.WriteLine(dateTime);
+
+    }
+    else if (DateTime.Now.DayOfWeek ==(DayOfWeek) 6)
+    {
+        dateTime = DateTime.Now.AddDays(1);
+        dateTime1 = dateTime.ToString("dd MMMM yyyy");
+        Console.WriteLine(dateTime);
+
+    }
+    else if (DateTime.Now.DayOfWeek ==(DayOfWeek) 7)
+    {
+        dateTime = DateTime.Now.AddDays(3);
+        Console.WriteLine(dateTime);
+
+    }
+    
+ 
+    
+  
 }
 
 <h1>Create</h1>
@@ -90,9 +139,8 @@
             <div>
                 <label asp-for="StartDate" class="control-label"></label>
 
-                <input asp-for="StartDate" class="form-control"/>
-                @* @Html.TextBox("DeliveredDate", , "{0:MM/dd/yyyy}", new { type = "date" }) *@
-                @* <input class="form-control col-sm-5" onchange="SetTime(this.value)" asp-for="StartDate" type="date" value="@DateTime.Today.ToString("dd-MM-yyyy")"/> *@
+                <input asp-for="StartDate" id="date" type="datetime-local" asp-format="{dd MMMM yyyy}" value="@dateTime1" class="form-control"/>
+             
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -124,19 +172,3 @@
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
 
-<script>   
-    $(document).ready(function () {
-            $('#category').change( function () {
-                if ($('#category').val() === 2) {
-                    $('#material').show();
-                    $('#materialLabel').show();
-                }
-                else {
-                    $('#material').hide();
-                      $('#materialLabel').hide();
-                      
-                }
-            });
-        });
-
-</script>
