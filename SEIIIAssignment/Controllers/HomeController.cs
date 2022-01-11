@@ -11,6 +11,7 @@ using SEIIIAssignment.Models;
 using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
 using Controller = Microsoft.AspNetCore.Mvc.Controller;
 
+
 namespace SEIIIAssignment.Controllers
 {
     public class HomeController : Controller
@@ -27,7 +28,8 @@ namespace SEIIIAssignment.Controllers
         public IActionResult Index()
         {
             RecurringJob.AddOrUpdate(() =>UpdateDatabase(),"* * * * *",TimeZoneInfo.Local);
-            return View();
+
+            return RedirectToAction("Login", "Account");
         }
 
         public IActionResult Privacy()
@@ -40,17 +42,36 @@ namespace SEIIIAssignment.Controllers
         {
             return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
-        public ActionResult GetData()
+        public ActionResult AdHoc()
         {
-            int admin = _context.Users.Where(x => x.Role == "Admin").Count();
-            int client = _context.Users.Where(x => x.Role == "Client").Count();
-         
-            Ratio obj = new Ratio();
-            obj.admin = admin;
-            obj.client = client;
-       
+             ViewData["Admin"] = _context.Users.Where(x => x.Role == "Admin").Count();
+             ViewData["Client"] = _context.Users.Where(x => x.Role == "Client").Count();
 
-            return Json(obj,JsonRequestBehavior.AllowGet);
+             var platform_family =  _context.Items.OrderBy(b=>b.CategoryId).GroupBy(r=>r.CategoryId).Select(g=>new {CategoryId= g.Key}).ToList();
+             var value= (from b in _context.Items
+                 
+                 
+                 group b by b.CategoryId into g
+                 select new { platform_family = g.Key }).ToList();
+             decimal total = _context.Items.Count();
+             List<string> platformfamily = new List<string>();
+             List<string> percentages = new List<string>();
+             foreach (var item in platform_family)
+             {
+                 decimal sum = _context.Items
+                     .Where(x => x.CategoryId == item.CategoryId)
+                     .OrderBy(x => x.CategoryId)
+                     .Count();
+                 var categoryName = _context.Items.Where(x => x.CategoryId == item.CategoryId)
+                     .Select(x => x.Category.CategoryName).FirstOrDefault();
+
+                 platformfamily.Add(categoryName);
+                 percentages.Add(sum.ToString("0"));
+             }
+             TempData["platform_family"] = string.Join(",", platformfamily);
+             TempData["percentage"] = string.Join(",", percentages);
+             
+             return View();
         }
 
         public class Ratio

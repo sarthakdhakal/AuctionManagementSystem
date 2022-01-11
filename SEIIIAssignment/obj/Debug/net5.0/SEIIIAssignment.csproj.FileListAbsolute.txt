@@ -151,12 +151,10 @@ D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Items
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Items\Edit.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Items\Index.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Categories\Create.cshtml.g.cs
-D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Categories\Delete.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Categories\Details.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Categories\Edit.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Categories\Index.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Classifications\Create.cshtml.g.cs
-D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Classifications\Delete.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Classifications\Details.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Classifications\Edit.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Classifications\Index.cshtml.g.cs
@@ -197,10 +195,8 @@ D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Accou
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Account\Login.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Account\Register.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Account\Create.cshtml.g.cs
-D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Account\Delete.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Account\Details.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Account\Edit.cshtml.g.cs
-D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Bids\Details.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Account\AccessDenied.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Bids\Create.cshtml.g.cs
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Account\Dashboard.cshtml.g.cs

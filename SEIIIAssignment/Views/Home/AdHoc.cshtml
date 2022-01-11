@@ -1,64 +1,73 @@
-﻿@* *@
-@* @{ *@
-@*     ViewBag.Title = "title"; *@
-@*     Layout = "_Layout"; *@
-@* } *@
-@* *@
-@* <script src="https://code.highcharts.com/highcharts.src.js"></script> *@
-@* *@
-@* *@
-@* <div class="jumbotron"> *@
-@*     <div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div> *@
-@* </div> *@
-@* *@
-@* <script> *@
-@* *@
-@* *@
-@*     $(document).ready(function () { *@
-@*         $.getJSON("/Home/GetData", function (data) { *@
-@* *@
-@* *@
-@* *@
-@*             Highcharts.chart('container', { *@
-@*                 chart: { *@
-@*                     plotBackgroundColor: null, *@
-@*                     plotBorderWidth: null, *@
-@*                     plotShadow: false, *@
-@*                     type: 'pie' *@
-@*                 }, *@
-@*                 title: { *@
-@*                     text: 'Users Ratio' *@
-@*                 }, *@
-@*                 tooltip: { *@
-@*                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>' *@
-@*                 }, *@
-@*                 plotOptions: { *@
-@*                     pie: { *@
-@*                         allowPointSelect: true, *@
-@*                         cursor: 'pointer', *@
-@*                         dataLabels: { *@
-@*                             enabled: true, *@
-@*                             format: '<b>{point.name}</b>: {point.percentage:.1f} %', *@
-@*                             style: { *@
-@*                                 color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black' *@
-@*                             } *@
-@*                         } *@
-@*                     } *@
-@*                 }, *@
-@*                 series: [{ *@
-@*                     name: 'Users', *@
-@*                     colorByPoint: true, *@
-@*                     data: [{ *@
-@*                         name: 'Admin', *@
-@*                         y: data.admin *@
-@*                     }, { *@
-@*                         name: 'Buyer/Seller', *@
-@*                         y: data.client *@
-@*                     }] *@
-@*                 }] *@
-@*             }); *@
-@*         }); *@
-@*     }); *@
-@* *@
-@* *@
-@* </script> *@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="align-content-center" style="width:600px; height: 600px;">
+    <canvas id="myChart"></canvas>
+    <h3>The piechart representing user ratio</h3>
+</div>
+<canvas id="lineChart" style="height: 600px; width:750px"></canvas>
+@section scripts{
+    <script src="//cdn.jsdelivr.net/npm/chart.js@2.8.0" ></script>
+    <script type="text/javascript">
+        $(function(){
+            console.log("1");
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+             labels: ["Admin","Buyer/Seller"],
+                datasets: [{
+                    
+                    backgroundColor:[ "#2ecc71","#3498db" ],
+                  
+                    data: [@ViewData["Admin"],@ViewData["Client"]]
+                }]
+            }
+        });});
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var labels = '@TempData["platform_family"]';
+            var datas = '@TempData["percentage"]';
+            var labelsArray = new Array();
+            var dataArray = new Array();
+            for (var i = 0; i < labels.split(',').length; i++) {
+                labelsArray.push(labels.split(',')[i]);
+                dataArray.push(datas.split(',')[i]);
+                console.log(labels.split(','));
+                console.log(labels);
+                
+            }
+            var ctx1 = document.getElementById("lineChart").getContext('2d');
+            var lineChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: labelsArray,
+                    datasets: [{
+                       
+                        backgroundColor: '#3EB9DC',
+                        data: dataArray
+                    }]
+                },
+                options: {
+                        legend: {display: false},
+                      scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    max:20,
+                                     stepSize: 1
+                                }
+                            }]
+                        },
+                    title: {
+                         display: true,
+                         text: "Items in the system"
+                       }
+                    
+                }
+            });
+        });
+    </script>
+}
