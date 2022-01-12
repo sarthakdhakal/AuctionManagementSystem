@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 #nullable disable
@@ -23,7 +24,7 @@ namespace SEIIIAssignment.Models
         public string Role { get; set; }
       
         public string Password { get; set; }
-  
+        [DisplayName("User Name")]
         public string UserName { get; set; }
 
         public virtual ICollection<Bid> Bids { get; set; }

@@ -1,14 +1,17 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Ad Hoc Report Page";
 }
+<div id="printableData">
+    <div class="align-content-center" style="width:600px; height: 600px;">
+        <canvas id="myChart"></canvas>
+        <h3 id="heading">The piechart representing user ratio</h3>
+    </div>
 
-<div class="align-content-center" style="width:600px; height: 600px;">
-    <canvas id="myChart"></canvas>
-    <h3>The piechart representing user ratio</h3>
+    <canvas id="lineChart" style="height: 600px; width:750px"></canvas>
 </div>
-<canvas id="lineChart" style="height: 600px; width:750px"></canvas>
+<input type="button" class="btn btn-success" value="Print" onclick="printPartOfPage();"/>  
 @section scripts{
-    <script src="//cdn.jsdelivr.net/npm/chart.js@2.8.0" ></script>
+    <script src="//cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script type="text/javascript">
         $(function(){
            
@@ -69,5 +72,23 @@
                 }
             });
         });
+    </script>
+    <script type="text/javascript">  
+
+    function printPartOfPage() {  
+        var heading = document.getElementById("heading");
+  var canvas = document.getElementById("myChart");
+                var img= canvas.toDataURL("image/png");
+                var canvas2 = document.getElementById("lineChart");
+                        var img2= canvas2.toDataURL("image/png");
+var newWin=window.open('','Print-Window','width=400,height=400,top=100,left=100');
+newWin.document.open();
+newWin.document.write('<html><body   onload="window.print()"><img src="'+img+'" alt=""/><br>'+heading.innerHTML+'<br><br><img src="'+img2+'" alt=""/></body></html>');
+newWin.document.close();
+setTimeout(function(){newWin.close();},10);
+             
+        
+        }
+ 
     </script>
 }

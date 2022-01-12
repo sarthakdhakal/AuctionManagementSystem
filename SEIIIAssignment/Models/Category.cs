@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 #nullable disable
@@ -14,7 +15,7 @@ namespace SEIIIAssignment.Models
         }
 
         public int CategoryId { get; set; }
-    
+        [DisplayName("Category Name")]
         public string CategoryName { get; set; }
 
         public virtual ICollection<Item> Items { get; set; }

@@ -264,7 +264,12 @@
             <a asp-action="Edit" asp-route-id="@Model.ItemId">Edit |</a>
         }
         <a asp-action="Delete" asp-route-id="@Model.ItemId">Delete |</a>
-        <a asp-action="Archive" asp-route-id="@Model.ItemId">Archive |</a>
+        if (Model.ArchiveStatus == 0)
+        {
+
+
+            <a asp-action="Archive" asp-route-id="@Model.ItemId">Archive |</a>
+        }
     }
 </div>
 @if (ViewBag.Message != null)

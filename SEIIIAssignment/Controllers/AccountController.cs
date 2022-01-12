@@ -9,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using SEIIIAssignment.Models;
 using BC = BCrypt.Net.BCrypt;
 using System.Threading.Tasks;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
+using MimeKit;
 
 namespace SEIIIAssignment.Controllers
 {
@@ -60,6 +62,7 @@ namespace SEIIIAssignment.Controllers
                 .FirstOrDefault(m => m.UserId == id);
             ViewBag.BoughtItems = _context.Items.Where(i => i.BoughtbyId == id).ToList();
             ViewBag.SoldItems = _context.Items.Where(i => i.PostedbyId == id).ToList();
+            ViewBag.Archives = _context.Items.Where(i => i.PostedbyId == id && i.ArchiveStatus==1).ToList();
             
             return View(user);
         }
@@ -187,7 +190,7 @@ namespace SEIIIAssignment.Controllers
                     new Claim(ClaimTypes.Name, username), 
                     new Claim(ClaimTypes.Sid, userData.UserId.ToString()),
                     new Claim(ClaimTypes.Role, "Admin"),
-                    new Claim(ClaimTypes.GivenName,userData.Name)
+                    new Claim(ClaimTypes.GivenName,userData.Name),new Claim(ClaimTypes.Email,userData.Email)
                    
 
                 }, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -201,7 +204,9 @@ namespace SEIIIAssignment.Controllers
                     new Claim(ClaimTypes.Name, username),
                     new Claim(ClaimTypes.Sid, userData.UserId.ToString()),
                     new Claim(ClaimTypes.GivenName,userData.Name),
-                    new Claim(ClaimTypes.Role, "Client")
+                    new Claim(ClaimTypes.Role, "Client"),
+                    new Claim(ClaimTypes.GivenName,userData.Name),new Claim(ClaimTypes.Email,userData.Email)
+                    
                  
 
                 }, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -237,22 +242,41 @@ namespace SEIIIAssignment.Controllers
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind("UserId,Name,Email,Password,UserName")] User user)
         {
             var userExists = _context.Users.FirstOrDefault(x => x.UserName == user.UserName);
-            if (ModelState.IsValid && userExists == null ){
+            if (ModelState.IsValid && userExists == null)
+            {
                 user.Password = BC.HashPassword(user.Password);
                 user.Role = "Client";
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Login");
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("Mr. Max Fotheby", "fothebyauctionhouse@gmail.com"));
+                message.To.Add(new MailboxAddress(user.Name, user.Email));
+                message.Subject = "Thank you for being a part of us";
+                message.Body = new TextPart("plain")
+                {
+                    Text = "Dear " + user.Name +
+                           ",\n\n\nWe are pleased to have you as a client for our system .\n\nMay I also take this opportunity again to thank you for using Fotherby’s auction house, as we seek to provide you with the best time here.\n\nYours Sincerely,\n\nMr M Fotherby"
+                };
+                using (var client = new SmtpClient())
+                {
+                    client.Connect("smtp.gmail.com", 587, false);
+                    client.Authenticate("fothebyauctionhouse@gmail.com", "FothebysHouse123");
+                    client.Send(message);
+                    client.Disconnect(true);
+                    return RedirectToAction("Login");
+                }
             }
 
             ViewData["Message"] = "User already exits. Try another username";
-            return View(user);
-        }
+                return View(user);
+            }
+        
 
         public RedirectToActionResult AccessDenied()
         {

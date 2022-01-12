@@ -209,3 +209,7 @@ D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\bin\Debug\net5.0\System.Web.WebPag
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\bin\Debug\net5.0\System.Web.WebPages.dll
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\bin\Debug\net5.0\Microsoft.Web.Infrastructure.dll
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\bin\Debug\net5.0\Newtonsoft.JsonResult.dll
+D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Items\Catalogue.cshtml.g.cs
+D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\bin\Debug\net5.0\MailKit.dll
+D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\bin\Debug\net5.0\MimeKit.dll
+D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\bin\Debug\net5.0\BouncyCastle.Crypto.dll

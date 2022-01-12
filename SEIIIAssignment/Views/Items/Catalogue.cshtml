@@ -1,0 +1,64 @@
+﻿@model System.Collections.Generic.List<SEIIIAssignment.Models.Item>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+
+<form method="get" asp-action="Index">
+    <div class="input-group">
+        <input class="form-control" name="searchString" value="@ViewData["ItemDetails"]">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">
+                Search
+            </button>
+        </div>
+    </div>
+</form>
+
+   @if (Model.Any()!= true)
+            {
+
+                <div class="row ">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header mt-3">
+                                <h2>Today's auction</h2>
+                            </div>
+
+                            <div class="row px-4">
+         
+                                @foreach (var item in Model)
+                                {
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card">
+                                            <img class="card-img-top" src="~/uploads/img/products/@Html.DisplayFor(modelItem => item.Image)" alt="Item Image">
+                                            <div class="card-body">
+                                                <h4 class="card-title">
+                                                    <a asp-action="Details" asp-route-id="@item.ItemId">Item Name: @Html.DisplayFor(modelItem => item.ProductName)</a>
+                                                </h4>
+                                                <p class="card-text"> Category: @Html.DisplayFor(modelItem => item.Category.CategoryName)</p>
+                                                <p class="card-text"> Classification: @Html.DisplayFor(modelItem => item.Classification.ClassificationName)</p>
+                                                <div class="row justify-content-center">
+                                                    <div class="col">
+                                                        <a asp-action="Details" asp-route-id="@item.ItemId" class="btn btn-success btn-block">Details</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+         
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+   else
+   {
+       <h3>No auctions happening.</h3>
+   }
+
+
