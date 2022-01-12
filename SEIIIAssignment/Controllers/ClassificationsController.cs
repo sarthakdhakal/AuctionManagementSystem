@@ -52,13 +52,12 @@ namespace SEIIIAssignment.Controllers
             return View();
         }
 
-        // POST: Classifications/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("ClassificationId,ClassificationName")] Classification classification)
+        public async Task<IActionResult> Create(
+            [Bind("ClassificationId,ClassificationName")] Classification classification)
         {
             if (ModelState.IsValid)
             {
@@ -66,10 +65,11 @@ namespace SEIIIAssignment.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(classification);
         }
 
-        // GET: Classifications/Edit/5
+        
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -83,16 +83,16 @@ namespace SEIIIAssignment.Controllers
             {
                 return NotFound();
             }
+
             return View(classification);
         }
 
-        // POST: Classifications/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("ClassificationId,ClassificationName")] Classification classification)
+        public async Task<IActionResult> Edit(int id,
+            [Bind("ClassificationId,ClassificationName")] Classification classification)
         {
             if (id != classification.ClassificationId)
             {
@@ -117,12 +117,14 @@ namespace SEIIIAssignment.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(classification);
         }
 
-        // GET: Classifications/Delete/5
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -131,16 +133,18 @@ namespace SEIIIAssignment.Controllers
                 return NotFound();
             }
 
-         
+
             var classification = await _context.Classifications.FindAsync(id);
-            if (classification== null)
+            if (classification == null)
             {
                 return NotFound();
             }
+
             _context.Classifications.Remove(classification);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        
         [Authorize(Roles = "Admin")]
         private bool ClassificationExists(int id)
         {

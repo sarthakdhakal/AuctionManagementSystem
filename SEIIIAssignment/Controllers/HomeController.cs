@@ -74,12 +74,7 @@ namespace SEIIIAssignment.Controllers
              return View();
         }
 
-        public class Ratio
-        {
-            public int admin { get; set; }
-            public int client { get; set; }
-        }
-
+        
         public void UpdateDatabase()
         {
             List<Item> items = _context.Items.Where(i => i.EndDate <= DateTime.Now && i.SellingAmount== null).ToList();
