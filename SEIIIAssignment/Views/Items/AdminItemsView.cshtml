@@ -1,0 +1,110 @@
+﻿@model List<Item>
+@{
+    ViewBag.Title = "All sales record";
+
+
+}
+<h3>SoldItems</h3>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Item Name
+        </th>
+        <th>
+        Status
+
+        <th>
+            Posted By
+        </th>
+        <th>
+            Bought By
+        </th>
+        <th>
+            Selling Amount
+        </th>
+
+        <th>
+            Commission
+        </th>
+
+
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model.Count > 0)
+    {
+        @foreach (var item in Model)
+        {
+            var comission = item.SellingAmount * 0.05;
+            <tr>
+                <td>
+                    @item.ProductName
+                </td>
+
+                <td>
+                    @if (item.SellingAmount != null)
+                    {
+                        <p>Sold</p>
+                    }
+                    else
+                    {
+                        <p>Pending Sale</p>
+                    }
+                </td>
+                <td>
+                    @if (item.Postedby != null)
+                    {
+                        @item.Postedby.Name
+                    }
+                    else
+                    {
+                        <p>None</p>
+                    }
+
+                </td>
+                <td>
+                    @if (item.Boughtby != null)
+                    {
+                        @item.Boughtby.Name
+                    }
+                    else
+                    {
+                        <p>None</p>
+                    }
+
+                </td>
+                <td>
+                    @if (item.SellingAmount != null)
+                    {
+                        @item.SellingAmount
+                    }
+                    else
+                    {
+                        <p>None</p>
+                    }
+
+                </td>
+                <td>
+                    @if (item.SellingAmount != null)
+                    {
+                        @comission
+                    }
+                    else
+                    {
+                        <p>None</p>
+                    }
+
+                </td>
+                <td>
+
+                    <a asp-action="Details" asp-route-id="@item.ItemId">Details</a>
+
+
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>

@@ -211,10 +211,11 @@
                     </li>
                 </ul>
             }
-            @if (Model.StartDate >= DateTime.Now && Model.EndDate >= DateTime.Now &&Model.SellingAmount == null)
+            @if (DateTime.Now >=Model.StartDate && Model.EndDate >= DateTime.Now && Model.SellingAmount == null)
             {
-                @if (id != Model.PostedbyId || role != "Admin")
+                @if (id != Model.PostedbyId && role != "Admin")
                 {
+                    //Massa, R. and Dontas, I., 2017. How to use ViewDataDictionary with Html.Partial in asp.net core?. [online] Stack Overflow. Available at: <https://stackoverflow.com/questions/40480198/how-to-use-viewdatadictionary-with-html-partial-in-asp-net-core> [Accessed 6 January 2022].
                     {
                         Html.RenderPartial("~/Views/Bids/Create.cshtml", new SEIIIAssignment.Models.Bid(), new ViewDataDictionary(ViewData) {{"ItemId", Model.ItemId}});
                     }
@@ -256,19 +257,20 @@
 </section>
 <div>
 
-    <a asp-action="Index">Back to List</a>
-    @if (id == Model.PostedbyId || role == "Admin" && Model.StartDate> DateTime.Now)
+    <a asp-action="Index">Back to List |</a>
+    @if (Model.StartDate >= DateTime.Now)
     {
-        if (Model.SellingAmount == null)
+        if (id == Model.PostedbyId || role == "Admin")
         {
-            <a asp-action="Edit" asp-route-id="@Model.ItemId">Edit |</a>
-        }
-        <a asp-action="Delete" asp-route-id="@Model.ItemId">Delete |</a>
-        if (Model.ArchiveStatus == 0)
-        {
-
-
-            <a asp-action="Archive" asp-route-id="@Model.ItemId">Archive |</a>
+            if (Model.SellingAmount == null)
+            {
+                <a asp-action="Edit" asp-route-id="@Model.ItemId">Edit |</a>
+            }
+            <a asp-action="Delete" asp-route-id="@Model.ItemId">Delete |</a>
+            if (Model.ArchiveStatus == 0)
+            {
+                <a asp-action="Archive" asp-route-id="@Model.ItemId">Archive |</a>
+            }
         }
     }
 </div>

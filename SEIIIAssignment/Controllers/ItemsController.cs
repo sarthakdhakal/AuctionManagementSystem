@@ -58,8 +58,20 @@ namespace SEIIIAssignment.Controllers
                 .Include(i => i.Classification);
             return View(await SEIIIContext.ToListAsync());
         }
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminItemsView()
+        {
+            
+           var items = await  _context.Items.Include(i => i.Postedby).Include(i => i.Boughtby).ToListAsync();
 
-        public async Task<IActionResult> Catalogue(string searchString)
+
+
+
+            return View(items);
+    }
+
+        [Authorize(Roles = "Admin,Client")]
+public async Task<IActionResult> Catalogue(string searchString)
         {
             ViewData["ItemDetails"] = searchString;
 
@@ -86,6 +98,7 @@ namespace SEIIIAssignment.Controllers
         }
 
         // GET: Items/Details/5
+        [Authorize(Roles = "Admin,Client")]
         public async Task<IActionResult> Details(int? id)
         {
             ViewBag.Message = TempData["Message"];
@@ -222,7 +235,7 @@ namespace SEIIIAssignment.Controllers
                 "ClassificationName", item.ClassificationId);
             return View(item);
         }
-
+        [Authorize(Roles = "Admin,Client")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
@@ -310,7 +323,7 @@ namespace SEIIIAssignment.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Roles = "Admin,Client")]
 
         public async Task<IActionResult> Archive(int? id)
         {
@@ -331,7 +344,7 @@ namespace SEIIIAssignment.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Roles = "Admin,Client")]
         public async Task<IActionResult> UnArchive(int? id)
         {
             if (id == null)
@@ -351,7 +364,7 @@ namespace SEIIIAssignment.Controllers
 
             return RedirectToAction("Dashboard", "Account");
         }
-
+        [Authorize(Roles = "Admin,Client")]
         private bool ItemExists(int id)
         {
             return _context.Items.Any(e => e.ItemId == id);

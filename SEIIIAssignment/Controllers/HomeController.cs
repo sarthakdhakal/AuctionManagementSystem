@@ -46,7 +46,7 @@ namespace SEIIIAssignment.Controllers
         {
             ViewData["Admin"] = _context.Users.Where(x => x.Role == "Admin").Count();
             ViewData["Client"] = _context.Users.Where(x => x.Role == "Client").Count();
-
+//ASPSnippets. 2022. Populate Canvas Bar chart from Database using ChartJS in ASP.Net MVC. [online] Available at: <https://www.aspsnippets.com/questions/536210/Populate-Canvas-Bar-chart-from-Database-using-ChartJS-in-ASPNet-MVC/> [Accessed 8 January 2022].
             var gList = _context.Items.OrderBy(b => b.CategoryId).GroupBy(r => r.CategoryId).Select(g => new { CategoryId = g.Key }).ToList();
 
             

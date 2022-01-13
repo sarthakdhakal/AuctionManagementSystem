@@ -63,7 +63,9 @@ namespace SEIIIAssignment.Controllers
                 .FirstOrDefault(m => m.UserId == id);
             ViewBag.BoughtItems = _context.Items.Where(i => i.BoughtbyId == id).ToList();
             ViewBag.SoldItems = _context.Items.Where(i => i.PostedbyId == id).ToList();
-            ViewBag.Archives = _context.Items.Where(i => i.PostedbyId == id && i.ArchiveStatus==1).ToList();
+            ViewBag.ArchivesByUser = _context.Items.Where(i => i.PostedbyId == id && i.ArchiveStatus==1).ToList();
+            
+            ViewBag.Archives = _context.Items.Where(i=> i.ArchiveStatus==1).ToList();
             
             return View(user);
         }
@@ -216,7 +218,7 @@ namespace SEIIIAssignment.Controllers
             {
                 return View();
             }
-
+//Void Geeks. 2019. Role Based Authorization in ASP.NET Core Application. [online] Available at: <http://www.voidgeeks.com/tutorial/Role-Based-Authorization-in-ASPNET-Core-Application/9> [Accessed 5 January 2022].
             ClaimsIdentity identity = null;
             bool isAuthenticate = false;
             if (userData.Role =="Admin")

@@ -27,12 +27,12 @@ namespace SEIIIAssignment.Controllers
             if (ModelState.IsValid)
             {
                 List<Bid> bids = _context.Bids.Where(b => b.ItemId == bid.ItemId).ToList();
-                var sellingAmount = _context.Items.Where(b => b.ItemId == bid.ItemId).Select(b=>b.SellingAmount).ToList().LastOrDefault();
+                var estimatedAmount = _context.Items.Where(b => b.ItemId == bid.ItemId).Select(b=>b.EstimatedAmount).ToList().LastOrDefault();
                 if (bids.Count>0)
                 {
                     foreach (var bidData in bids)
                     {
-                        if (bid.Amount> bidData.Amount || bid.Amount<=sellingAmount)
+                        if (bid.Amount> bidData.Amount )
                         {
                             var userId = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
                             bid.BidderId = Int32.Parse(userId);
@@ -51,12 +51,23 @@ namespace SEIIIAssignment.Controllers
                 }
                 else
                 {
-                    var userId = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
-                    bid.BidderId = Int32.Parse(userId);
-                    bid.CreatedAt = DateTime.Now;
-                    _context.Add(bid);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Details", "Items", new {id = bid.ItemId});
+                    if (bid.Amount > estimatedAmount)
+                    {
+                        var userId = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
+
+                        bid.BidderId = Int32.Parse(userId);
+                        bid.CreatedAt = DateTime.Now;
+                        _context.Add(bid);
+                        await _context.SaveChangesAsync();
+
+
+                        return RedirectToAction("Details", "Items", new {id = bid.ItemId});
+                    }
+                    else
+                    {
+                        TempData["Message"] = "The bid amount is less than the estimated amount";
+                        return RedirectToAction("Details", "Items", new {id = bid.ItemId});
+                    }
                 }
               
                

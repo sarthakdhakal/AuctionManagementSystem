@@ -1,4 +1,5 @@
-﻿@model SEIIIAssignment.Models.User
+﻿@using System.Security.Claims
+@model SEIIIAssignment.Models.User
 
 @{
     ViewData["Title"] = "Profile";
@@ -6,9 +7,9 @@
 
 }
 
-<div class="row mb-2 mb-xl-3">
+
     <div class="row">
-        <div class="col-6">
+      <div class="col-lg-4 mt-5">
             <div class="card mb-3">
                 <div class="card-header">
                     <h5 class="card-title mb-0"></h5>
@@ -28,19 +29,21 @@
                             @Model.UserName</li>
 
                         <li class="mb-1"><span data-feather="mail" class="feather-sm me-1"></span> Email: @Model.Email
-                        </li>
+                        </li> <li class="mb-1"><span data-feather="mail" class="feather-sm me-1"></span> Role: @Model.Role
+                                                     </li>
+                        
                     </ul>
                 </div>
             </div>
         </div>
 
-        <div class="col-6">
-            <div class="col">
+       <div class="col-lg-8 mt-5">
+            <div class="col pb-4">
                 <table class="table">
                     <thead>
                     <tr>
                         <th>
-                            Sold Item Name
+                            Posted Item Name
                         </th>
 
                     </tr>
@@ -59,69 +62,111 @@
                     }
                     </tbody>
                 </table>
-                <br />
-            </div>
-            <div class="col">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>
-                            Bought Item Name
-                        </th>
+               @if (User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value == "Admin")
+               {
+                   <div class="col pb-4">
+                      
+                       <table class="table">
+                           <thead>
+                           <tr>
+                               <th>
+                                   Archived Items
+                               </th>
+                               <th>
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var item in ViewBag.BoughtItems)
-                    {
-                        <tr>
-                            <td>
-                                <a asp-action="Details" asp-controller="Items"
-                                   asp-route-id="@item.ItemId">@item.ProductName</a>
-                            </td>
+                               </th>
+
+                           </tr>
+                           </thead>
+                           @if (ViewBag.Archives != null)
+                           {
+                               <tbody>
+                               @foreach (var item in ViewBag.Archives)
+                               {
+                                   <tr>
+                                       <td>
+                                           <a asp-action="Details" asp-controller="Items"
+                                              asp-route-id="@item.ItemId">@item.ProductName</a>
+                                       </td>
+                                       <td>
+                                           <a asp-action="UnArchive" asp-controller="Items"
+                                              asp-route-id="@item.ItemId">UnArchive</a>
+                                       </td>
+
+                                   </tr>
+                               }
+                               </tbody>
+                           }
+                       </table>
+                   </div>
+            
+           
+               }
+               else
+               {
+                   <div class="col pb-4">
+                       <table class="table">
+                           <thead>
+                           <tr>
+                               <th>
+                                   Bought Item Name
+                               </th>
+
+                           </tr>
+                           </thead>
+                           <tbody>
+                           @foreach (var item in ViewBag.BoughtItems)
+                           {
+                               <tr>
+                                   <td>
+                                       <a asp-action="Details" asp-controller="Items"
+                                          asp-route-id="@item.ItemId">@item.ProductName</a>
+                                   </td>
 
 
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-     
-            <div class="col">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>
-                            Archived Items
-                        </th>
-                        <th>
+                               </tr>
+                           }
+                           </tbody>
+                       </table>
+                   </div>
 
-                        </th>
 
-                    </tr>
-                    </thead>
-                       @if (ViewBag.ArchivedItems != null)
-                            {
-                                <tbody>
-                                @foreach (var item in ViewBag.ArchivedItems)
-                                {
-                                    <tr>
-                                        <td>
-                                            <a asp-action="Details" asp-controller="Items"
-                                               asp-route-id="@item.ItemId">@item.ProductName</a>
-                                        </td>
-                                        <td>
-                                            <a asp-action="UnArchive" asp-controller="Items"
-                                               asp-route-id="@item.ItemId">UnArchive</a>
-                                        </td>
+                   <div class="col pb-4">
+                       <h5>Archived Items Added By the User</h5>
+                       <table class="table">
+                           <thead>
+                           <tr>
+                               <th>
+                                   Archived Items
+                               </th>
+                               <th>
 
-                                    </tr>
-                                }
-                                </tbody>
-                            }
-                </table>
-            </div>
-     
+                               </th>
+
+                           </tr>
+                           </thead>
+                           @if (ViewBag.ArchivesByUser != null)
+                           {
+                               <tbody>
+                               @foreach (var item in ViewBag.ArchivesByUser)
+                               {
+                                   <tr>
+                                       <td>
+                                           <a asp-action="Details" asp-controller="Items"
+                                              asp-route-id="@item.ItemId">@item.ProductName</a>
+                                       </td>
+                                       <td>
+                                           <a asp-action="UnArchive" asp-controller="Items"
+                                              asp-route-id="@item.ItemId">UnArchive</a>
+                                       </td>
+
+                                   </tr>
+                               }
+                               </tbody>
+                           }
+                       </table>
+                   </div>
+               }
+      </div>
     </div>
 </div>

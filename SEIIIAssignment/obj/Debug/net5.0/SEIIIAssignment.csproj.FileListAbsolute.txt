@@ -212,3 +212,4 @@ D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Items
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\bin\Debug\net5.0\MailKit.dll
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\bin\Debug\net5.0\MimeKit.dll
 D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\bin\Debug\net5.0\BouncyCastle.Crypto.dll
+D:\DotNetCore\SEIIIAssignment\SEIIIAssignment\obj\Debug\net5.0\Razor\Views\Items\AdminItemsView.cshtml.g.cs

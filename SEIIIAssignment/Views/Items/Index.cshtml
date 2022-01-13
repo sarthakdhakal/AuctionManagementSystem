@@ -45,15 +45,18 @@
                                 </h4>
                                 <p class="card-text"> Category: @Html.DisplayFor(modelItem => item.Category.CategoryName)</p>
                                 <p class="card-text"> Classification: @Html.DisplayFor(modelItem => item.Classification.ClassificationName)</p>
-                                @if (DateTime.Now <= item.StartDate)
+                              
+                               @if (item.StartDate<= DateTime.Now && DateTime.Now <= item.EndDate)
                                 {
-                                    <p class="card-text">Auction Not started</p>
-                                }
-                                else if (item.StartDate <= DateTime.Now && DateTime.Now <= item.EndDate)
-                                {
+                                   
                                     <p class="card-text">Active auction</p>
                                 }
-                                else if (DateTime.Now >= item.EndDate)
+                               @if (DateTime.Now <= item.StartDate)
+                               {
+                               
+                                   <p class="card-text">Auction Not started</p>
+                               }
+                                @if (DateTime.Now >= item.EndDate)
                                 {
                                     <p class="card-text">Auction completed</p>
                                 }
