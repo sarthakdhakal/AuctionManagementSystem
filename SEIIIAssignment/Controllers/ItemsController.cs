@@ -230,7 +230,7 @@ public async Task<IActionResult> Catalogue(string searchString)
             }
 
             ViewData["CategoryName"] = new SelectList(_context.Categories, "CategoryId", "CategoryName",
-                item.Category.CategoryName);
+                item.CategoryId);
             ViewData["ClassificationName"] = new SelectList(_context.Classifications, "ClassificationId",
                 "ClassificationName", item.ClassificationId);
             return View(item);
