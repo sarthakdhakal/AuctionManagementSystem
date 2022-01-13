@@ -227,7 +227,7 @@ namespace SEIIIAssignment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
             [Bind(
-                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ItemType,Material,Weight,Height,Length,Medium,IsFramed,Width,ProductName,CategoryId,ClassificationId,StartDate,EstimatedAmount")]
+                "ItemId,ProducedYear,TextualDescription,Image,CreatedAt,Artist,ImageType,Material,Weight,Height,Length,Medium,IsFramed,Width,ProductName,CategoryId,ClassificationId,StartDate,EstimatedAmount")]
             Item item)
         {
             if (id != item.ItemId)
@@ -239,6 +239,28 @@ namespace SEIIIAssignment.Controllers
             {
                 try
                 {
+                    var files = HttpContext.Request.Form.Files;
+                    foreach (var image in files)
+                    {
+                        if (image != null && image.Length > 0)
+                        {
+                            var file = image;
+                            var uploads = Path.Combine(_environment.WebRootPath, "uploads\\img\\products");
+
+                            if (file.Length > 0)
+                            {
+                                var fileName = Guid.NewGuid().ToString().Replace("-", "") +
+                                               Path.GetExtension(file.FileName);
+
+                                using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                                {
+                                    await file.CopyToAsync(fileStream);
+                                }
+
+                                item.Image = fileName;
+                            }
+                        }
+                    }
                     DateTime date = (DateTime) item.StartDate;
                     item.EndDate = date.AddMinutes(1436);
 

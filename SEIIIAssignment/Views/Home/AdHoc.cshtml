@@ -31,8 +31,8 @@
     </script>
     <script type="text/javascript">
         $(function () {
-            var labels = '@TempData["platform_family"]';
-            var datas = '@TempData["percentage"]';
+            var labels = '@TempData["nameOfIndexes"]';
+            var datas = '@TempData["values"]';
             var labelsArray = new Array();
             var dataArray = new Array();
             for (var i = 0; i < labels.split(',').length; i++) {

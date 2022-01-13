@@ -25,7 +25,8 @@ namespace SEIIIAssignment.Controllers
         }
         [Authorize(Roles = "Admin")]
           public async Task<IActionResult> Index()
-        {
+          {
+              ViewBag.UnApproved = await _context.Users.Where(u => u.ApprovalStatus == 0).ToListAsync();
             return View(await _context.Users.ToListAsync());
         }
 
@@ -78,7 +79,7 @@ namespace SEIIIAssignment.Controllers
             var userExists = _context.Users.FirstOrDefault(x => x.UserName == user.UserName);
             if (ModelState.IsValid && userExists == null ){
                 user.Password = BC.HashPassword(user.Password);
-
+                user.ApprovalStatus = 1;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -158,6 +159,41 @@ namespace SEIIIAssignment.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Approve(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.ApprovalStatus = 1;
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Mr. Max Fotheby", "fothebyauctionhouse@gmail.com"));
+            message.To.Add(new MailboxAddress(user.Name, user.Email));
+            message.Subject = "Thank you for being a part of us";
+            message.Body = new TextPart("plain")
+            {
+                Text = "Dear " + user.Name +
+                       ",\n\n\nWe are pleased to have you as a client for our system .\n\nMay I also take this opportunity again to thank you for using Fotherby’s auction house, as we seek to provide you with the best time here.\n\nYours Sincerely,\n\nMr M Fotherby"
+            };
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("fothebyauctionhouse@gmail.com", "FothebysHouse123");
+                client.Send(message);
+                client.Disconnect(true);
+                    
+            }
+            return RedirectToAction(nameof(Index));
+        }
         public IActionResult Login()
         {
            
@@ -176,7 +212,7 @@ namespace SEIIIAssignment.Controllers
                return RedirectToAction("Index", "Items");
             }
             var userData = _context.Users.SingleOrDefault(x => x.UserName == username);
-            if (userData == null || !BC.Verify(password, userData.Password))
+            if (userData == null || !BC.Verify(password, userData.Password)||userData.ApprovalStatus==0)
             {
                 return View();
             }
@@ -250,27 +286,13 @@ namespace SEIIIAssignment.Controllers
             var userExists = _context.Users.FirstOrDefault(x => x.UserName == user.UserName);
             if (ModelState.IsValid && userExists == null)
             {
+                user.ApprovalStatus = 0;
                 user.Password = BC.HashPassword(user.Password);
                 user.Role = "Client";
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Mr. Max Fotheby", "fothebyauctionhouse@gmail.com"));
-                message.To.Add(new MailboxAddress(user.Name, user.Email));
-                message.Subject = "Thank you for being a part of us";
-                message.Body = new TextPart("plain")
-                {
-                    Text = "Dear " + user.Name +
-                           ",\n\n\nWe are pleased to have you as a client for our system .\n\nMay I also take this opportunity again to thank you for using Fotherby’s auction house, as we seek to provide you with the best time here.\n\nYours Sincerely,\n\nMr M Fotherby"
-                };
-                using (var client = new SmtpClient())
-                {
-                    client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate("fothebyauctionhouse@gmail.com", "FothebysHouse123");
-                    client.Send(message);
-                    client.Disconnect(true);
-                    return RedirectToAction("Login");
-                }
+              
+                return RedirectToAction("Login");
             }
 
             ViewData["Message"] = "User already exits. Try another username";

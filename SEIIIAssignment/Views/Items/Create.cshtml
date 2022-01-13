@@ -67,18 +67,35 @@
                 <input type="file" asp-for="Image" accept="image/*" class="form-control"/>
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
-
             <div class="form-group">
                 <label asp-for="Artist" class="control-label"></label>
                 <input asp-for="Artist" class="form-control"/>
                 <span asp-validation-for="Artist" class="text-danger"></span>
             </div>
-
-
+            <div>
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" type="date" value="@dateTime.ToString("yyyy-MM-dd")" class="form-control"/>
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Height" class="control-label"></label>
+                <input asp-for="Height" class="form-control"/>
+                <span asp-validation-for="Height" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Length" class="control-label"></label>
+                <input asp-for="Length" class="form-control"/>
+                <span asp-validation-for="Length" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EstimatedAmount" class="control-label"></label>
+                <input asp-for="EstimatedAmount" class="form-control"/>
+                <span asp-validation-for="EstimatedAmount" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="CategoryId" class="control-label"></label>
                 <select asp-for="CategoryId" id="category" onclick="showHide()" class="form-control" asp-items="ViewBag.CategoryName">
-                <option value="" disabled selected>Select your option</option>
+                    <option value="" disabled selected>Select your option</option>
 
                 </select>
             </div>
@@ -87,15 +104,9 @@
                 <select asp-for="ClassificationId" class="form-control" asp-items="ViewBag.ClassificationName"></select>
             </div>
 
-            <div>
-                <label asp-for="StartDate" class="control-label"></label>
 
-                <input asp-for="StartDate" type="date" value="@dateTime.ToString("yyyy-MM-dd")" class="form-control"/>
-
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
             <div class="form-group">
-                <label asp-for="IsFramed" id="isFramedLabel"style="display: none"  class="control-label"></label>
+                <label asp-for="IsFramed" id="isFramedLabel"style="display: none" class="control-label"></label>
                 <select asp-for="IsFramed" id="isFramed" style="display: none" class="form-control" d="Select your option">
                     <option value="" disabled selected>Select your option</option>
                     <option value="1"> Yes</option>
@@ -109,19 +120,10 @@
                 <input asp-for="Weight" id="weight" class="form-control"/>
                 <span asp-validation-for="Weight" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Height" class="control-label"></label>
-                <input asp-for="Height" class="form-control"/>
-                <span asp-validation-for="Height" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Length" class="control-label"></label>
-                <input asp-for="Length" class="form-control"/>
-                <span asp-validation-for="Length" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Medium" id="mediumLabel"style="display: none"  class="control-label"></label>
-                <input asp-for="Medium" id="medium"style="display: none"  class="form-control"/>
+                <label asp-for="Medium" id="mediumLabel"style="display: none" class="control-label"></label>
+                <input asp-for="Medium" id="medium"style="display: none" class="form-control"/>
                 <span asp-validation-for="Medium" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -131,22 +133,17 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Width" id="widthLabel" style="display: none"  class="control-label"></label>
+                <label asp-for="Width" id="widthLabel" style="display: none" class="control-label"></label>
                 <input asp-for="Width" id="width" style="display: none" class="form-control"/>
                 <span asp-validation-for="Width" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Material" id="materialLabel" style="display: none"  class="control-label"></label>
+                <label asp-for="Material" id="materialLabel" style="display: none" class="control-label"></label>
                 <input asp-for="Material" id="material" style="display: none" class="form-control"/>
                 <span asp-validation-for="Material" class="text-danger"></span>
             </div>
 
 
-            <div class="form-group">
-                <label asp-for="EstimatedAmount" class="control-label"></label>
-                <input asp-for="EstimatedAmount" class="form-control"/>
-                <span asp-validation-for="EstimatedAmount" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary"/>
             </div>
@@ -169,14 +166,14 @@
             document.getElementById('mediumLabel').style.display = 'block';
             document.getElementById('isFramedLabel').style.display = 'block';
             document.getElementById('isFramed').style.display = 'block';
-                 document.getElementById('material').style.display = 'none';
-                        document.getElementById('materialLabel').style.display = 'none';
-                        document.getElementById('weightLabel').style.display = 'none';
-                        document.getElementById('weight').style.display = 'none';
-                        document.getElementById('widthLabel').style.display = 'none';
-                        document.getElementById('width').style.display = 'none';
-                               document.getElementById('imageTypeLabel').style.display = 'none';
-                                                            document.getElementById('imageType').style.display = 'none';
+            document.getElementById('material').style.display = 'none';
+            document.getElementById('materialLabel').style.display = 'none';
+            document.getElementById('weightLabel').style.display = 'none';
+            document.getElementById('weight').style.display = 'none';
+            document.getElementById('widthLabel').style.display = 'none';
+            document.getElementById('width').style.display = 'none';
+            document.getElementById('imageTypeLabel').style.display = 'none';
+            document.getElementById('imageType').style.display = 'none';
         }else if(selection.value == 4||selection.value==5){
             document.getElementById('material').style.display = 'block';
             document.getElementById('materialLabel').style.display = 'block';
@@ -184,30 +181,28 @@
             document.getElementById('weight').style.display = 'block';
             document.getElementById('widthLabel').style.display = 'block';
             document.getElementById('width').style.display = 'block';
-             document.getElementById('medium').style.display = 'none';
-                        document.getElementById('mediumLabel').style.display = 'none';
-                        document.getElementById('isFramedLabel').style.display = 'none';
-                        document.getElementById('isFramed').style.display = 'none';
-                          document.getElementById('imageTypeLabel').style.display = 'none';
-                                    document.getElementById('imageType').style.display = 'none';
-            }
-            else if(selection.value == 3){
-                
+            document.getElementById('medium').style.display = 'none';
+            document.getElementById('mediumLabel').style.display = 'none';
+            document.getElementById('isFramedLabel').style.display = 'none';
+            document.getElementById('isFramed').style.display = 'none';
+            document.getElementById('imageTypeLabel').style.display = 'none';
+            document.getElementById('imageType').style.display = 'none';
+        }
+        else if(selection.value == 3)
+        {
             document.getElementById('imageTypeLabel').style.display = 'block';
             document.getElementById('imageType').style.display = 'block';
-               document.getElementById('material').style.display = 'none';
-                                    document.getElementById('materialLabel').style.display = 'none';
-                                    document.getElementById('weightLabel').style.display = 'none';
-                                    document.getElementById('weight').style.display = 'none';
-                                    document.getElementById('widthLabel').style.display = 'none';
-                                    document.getElementById('width').style.display = 'none';
-                                       document.getElementById('medium').style.display = 'none';
-                                                            document.getElementById('mediumLabel').style.display = 'none';
-                                                            document.getElementById('isFramedLabel').style.display = 'none';
-                                                            document.getElementById('isFramed').style.display = 'none';
-                                                }
-                
-       
+            document.getElementById('material').style.display = 'none';
+            document.getElementById('materialLabel').style.display = 'none';
+            document.getElementById('weightLabel').style.display = 'none';
+            document.getElementById('weight').style.display = 'none';
+            document.getElementById('widthLabel').style.display = 'none';
+            document.getElementById('width').style.display = 'none';
+            document.getElementById('medium').style.display = 'none';
+            document.getElementById('mediumLabel').style.display = 'none';
+            document.getElementById('isFramedLabel').style.display = 'none';
+            document.getElementById('isFramed').style.display = 'none';
+        }
     }
     </script>
 }

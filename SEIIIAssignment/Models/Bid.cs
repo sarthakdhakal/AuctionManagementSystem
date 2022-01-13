@@ -11,7 +11,7 @@ namespace SEIIIAssignment.Models
         public int BidId { get; set; }
         public DateTime? CreatedAt { get; set; }
         public int? BidderId { get; set; }
-        public int? ItemId { get; set; }
+        public int? ItemId { get; set; }      
         [Required]
         public double? Amount { get; set; }
 

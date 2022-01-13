@@ -1,10 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Http
-@inject IHttpContextAccessor HttpContextAccessor
+
 @model IEnumerable<SEIIIAssignment.Models.User>
 
 @{
     ViewData["Title"] = "Index";
-    
+
 }
 
 <h1>Index</h1>
@@ -23,7 +23,7 @@
         <th>
             @Html.DisplayNameFor(model => model.Role)
         </th>
-        
+
         <th></th>
     </tr>
     </thead>
@@ -40,7 +40,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Role)
             </td>
-         
+
             <td>
                 <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
@@ -50,3 +50,45 @@
     }
     </tbody>
 </table>
+@if (ViewBag.UnApproved != null)
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+               Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Role
+            </th>
+
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var itemData in ViewBag.UnApproved)
+        {
+            <tr>
+                <td>
+                  @itemData.Name
+                </td>
+                <td>
+                    @itemData.Email
+                </td>
+                <td>
+                   @itemData.Role
+                </td>
+
+                <td>
+                    <a asp-action="Approve" asp-route-id="@itemData.UserId">Approve</a> |
+                    <a asp-action="Details" asp-route-id="@itemData.UserId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@itemData.UserId">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

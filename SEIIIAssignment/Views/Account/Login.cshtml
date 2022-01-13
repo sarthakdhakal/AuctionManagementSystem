@@ -20,20 +20,23 @@
                     <div class="icon d-flex align-items-center justify-content-center">
                         <span class="fa fa-user-o"></span>
                     </div>
-                    
+
                     <form asp-action="Login" class="login-form">
                         <div class="form-group">
-                            <input asp-for="UserName" type="text" class="form-control rounded-left" placeholder="Username" required>
+                            <input asp-for="UserName" type="text" class="form-control rounded-left"
+                                placeholder="Username" required>
                             <span asp-validation-for="UserName" class="text-danger"></span>
                         </div>
                         <div class="form-group d-flex">
-                            <input asp-for="Password" type="password" class="form-control rounded-left" placeholder="Password" required>
-                              <span asp-validation-for="Password" class="text-danger"></span>
+                            <input asp-for="Password" type="password" class="form-control rounded-left"
+                                placeholder="Password" required>
+                            <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <button type="submit" value="Login" class="form-control btn btn-success rounded submit px-3">Login</button>
+                            <button type="submit" value="Login"
+                                class="form-control btn btn-success rounded submit px-3">Login</button>
                         </div>
-                
+
                     </form>
                 </div>
             </div>
@@ -42,5 +45,5 @@
 </section>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -211,7 +211,7 @@
                     </li>
                 </ul>
             }
-            @if (Model.StartDate >= DateTime.Now && Model.EndDate >= DateTime.Now)
+            @if (Model.StartDate >= DateTime.Now && Model.EndDate >= DateTime.Now &&Model.SellingAmount == null)
             {
                 @if (id != Model.PostedbyId || role != "Admin")
                 {
@@ -257,7 +257,7 @@
 <div>
 
     <a asp-action="Index">Back to List</a>
-    @if (id == Model.PostedbyId || role == "Admin")
+    @if (id == Model.PostedbyId || role == "Admin" && Model.StartDate> DateTime.Now)
     {
         if (Model.SellingAmount == null)
         {
@@ -275,7 +275,7 @@
 @if (ViewBag.Message != null)
 {
     <script type="text/javascript">
-        alert("@ViewBag.Message");
+    alert("@ViewBag.Message");
   </script>
 }
 

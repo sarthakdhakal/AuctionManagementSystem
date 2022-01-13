@@ -14,18 +14,21 @@
                     <h5 class="card-title mb-0"></h5>
                 </div>
                 <div class="card-body text-center">
-                    <img src="~/uploads/img/user.png" alt="@Model.UserName" class="img-fluid rounded-circle mb-2" width="128" height="128"/>
+                    <img src="~/uploads/img/user.png" alt="@Model.UserName" class="img-fluid rounded-circle mb-2"
+                        width="128" height="128" />
                     <h3 class="card-title mb-0"> @Model.Name </h3>
                 </div>
-                <hr class="my-0"/>
+                <hr class="my-0" />
 
-                <hr class="my-0"/>
+                <hr class="my-0" />
                 <div class="card-body">
                     <h5 class="h6 card-title">About</h5>
                     <ul class="list-unstyled mb-0">
-                        <li class="mb-1"><span data-feather="at-sign" class="feather-sm me-1"></span> Username : @Model.UserName</li>
+                        <li class="mb-1"><span data-feather="at-sign" class="feather-sm me-1"></span> Username :
+                            @Model.UserName</li>
 
-                        <li class="mb-1"><span data-feather="mail" class="feather-sm me-1"></span> Email: @Model.Email</li>
+                        <li class="mb-1"><span data-feather="mail" class="feather-sm me-1"></span> Email: @Model.Email
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -47,7 +50,8 @@
                     {
                         <tr>
                             <td>
-                                <a asp-action="Details" asp-controller="Items" asp-route-id="@item.ItemId">@item.ProductName</a>
+                                <a asp-action="Details" asp-controller="Items"
+                                   asp-route-id="@item.ItemId">@item.ProductName</a>
                             </td>
 
 
@@ -55,7 +59,7 @@
                     }
                     </tbody>
                 </table>
-                <br/>
+                <br />
             </div>
             <div class="col">
                 <table class="table">
@@ -72,7 +76,8 @@
                     {
                         <tr>
                             <td>
-                                <a asp-action="Details" asp-controller="Items" asp-route-id="@item.ItemId">@item.ProductName</a>
+                                <a asp-action="Details" asp-controller="Items"
+                                   asp-route-id="@item.ItemId">@item.ProductName</a>
                             </td>
 
 
@@ -82,34 +87,41 @@
                 </table>
             </div>
         </div>
-        <div class="col">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>
-                        Archived Items
-                    </th>
-                    <th>
-
-                    </th>
-
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var item in ViewBag.ArchivedItems)
-                {
+     
+            <div class="col">
+                <table class="table">
+                    <thead>
                     <tr>
-                        <td>
-                            <a asp-action="Details" asp-controller="Items" asp-route-id="@item.ItemId">@item.ProductName</a>
-                        </td>
-<td>
-                            <a asp-action="UnArchive" asp-controller="Items" asp-route-id="@item.ItemId">@item.ProductName</a>
-                        </td>
+                        <th>
+                            Archived Items
+                        </th>
+                        <th>
+
+                        </th>
 
                     </tr>
-                }
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                       @if (ViewBag.ArchivedItems != null)
+                            {
+                                <tbody>
+                                @foreach (var item in ViewBag.ArchivedItems)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a asp-action="Details" asp-controller="Items"
+                                               asp-route-id="@item.ItemId">@item.ProductName</a>
+                                        </td>
+                                        <td>
+                                            <a asp-action="UnArchive" asp-controller="Items"
+                                               asp-route-id="@item.ItemId">UnArchive</a>
+                                        </td>
+
+                                    </tr>
+                                }
+                                </tbody>
+                            }
+                </table>
+            </div>
+     
     </div>
 </div>
