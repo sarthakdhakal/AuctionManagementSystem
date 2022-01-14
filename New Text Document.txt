@@ -1,0 +1,10 @@
+The database are kept in the database folder in the SEIIIAssingment folder and both .bak file from
+backup in MSSQL is done and sql script also has been generated.
+The users of the systems abd their passwords:
+Admin:
+username: sarthak
+password: sarthak
+
+Client
+username: ssajal
+password: sajal

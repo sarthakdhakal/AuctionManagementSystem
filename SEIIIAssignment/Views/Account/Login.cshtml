@@ -45,5 +45,11 @@
 </section>
 
 @section Scripts {
-@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @if (ViewBag.Message != null)
+    {
+        <script type="text/javascript">
+            alert("@ViewBag.Message");
+      </script>
+    }
 }

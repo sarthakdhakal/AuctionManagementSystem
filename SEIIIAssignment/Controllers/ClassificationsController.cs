@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+
 using Microsoft.EntityFrameworkCore;
 using SEIIIAssignment.Models;
 
@@ -19,14 +18,14 @@ namespace SEIIIAssignment.Controllers
             _context = context;
         }
 
-        // GET: Classifications
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Classifications.ToListAsync());
         }
 
-        // GET: Classifications/Details/5
+       
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -45,7 +44,7 @@ namespace SEIIIAssignment.Controllers
             return View(classification);
         }
 
-        // GET: Classifications/Create
+
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {

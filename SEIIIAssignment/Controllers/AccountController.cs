@@ -70,15 +70,13 @@ namespace SEIIIAssignment.Controllers
             return View(user);
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+     
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("UserId,Name,Email,Role,Password,UserName")] User user)
         {
-            var userExists = _context.Users.FirstOrDefault(x => x.UserName == user.UserName);
+            var userExists = _context.Users.FirstOrDefault(x => x.UserName == user.UserName || x.Email==user.Email);
             if (ModelState.IsValid && userExists == null ){
                 user.Password = BC.HashPassword(user.Password);
                 user.ApprovalStatus = 1;
@@ -157,6 +155,22 @@ namespace SEIIIAssignment.Controllers
             {
                 return NotFound();
             }
+
+          
+            var bids = _context.Bids.Where(x => x.BidderId == user.UserId).ToList();
+            foreach (var bid in bids)
+            {
+                _context.Bids.Remove(bid);
+                await _context.SaveChangesAsync();
+            }     
+            var items = _context.Items.Where(x => x.Postedby.UserId == user.UserId).ToList();
+            foreach (var item in items)
+            {
+             
+                _context.Items.Remove(item);
+                await _context.SaveChangesAsync();
+            }
+            
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -177,23 +191,24 @@ namespace SEIIIAssignment.Controllers
             user.ApprovalStatus = 1;
             _context.Update(user);
             await _context.SaveChangesAsync();
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Mr. Max Fotheby", "fothebyauctionhouse@gmail.com"));
-            message.To.Add(new MailboxAddress(user.Name, user.Email));
-            message.Subject = "Thank you for being a part of us";
-            message.Body = new TextPart("plain")
-            {
-                Text = "Dear " + user.Name +
-                       ",\n\n\nWe are pleased to have you as a client for our system .\n\nMay I also take this opportunity again to thank you for using Fotherby’s auction house, as we seek to provide you with the best time here.\n\nYours Sincerely,\n\nMr M Fotherby"
-            };
-            using (var client = new SmtpClient())
-            {
-                client.Connect("smtp.gmail.com", 587, false);
-                client.Authenticate("fothebyauctionhouse@gmail.com", "FothebysHouse123");
-                client.Send(message);
-                client.Disconnect(true);
-                    
-            }
+               //The code for the email has been commented out as and can be used by putting in credentials and allowing less secure apps in google accounts
+            // var message = new MimeMessage();
+            // message.From.Add(new MailboxAddress("Mr. Max Fotheby", ""));
+            // message.To.Add(new MailboxAddress(user.Name, user.Email));
+            // message.Subject = "Thank you for being a part of us";
+            // message.Body = new TextPart("plain")
+            // {
+            //     Text = "Dear " + user.Name +
+            //            ",\n\n\nWe are pleased to have you as a client for our system .\n\nMay I also take this opportunity again to thank you for using Fotherby’s auction house, as we seek to provide you with the best time here.\n\nYours Sincerely,\n\nMr M Fotherby"
+            // };
+            // using (var client = new SmtpClient())
+            // {
+            //     client.Connect("smtp.gmail.com", 587, false);
+            //     client.Authenticate("","");
+            //     client.Send(message);
+            //     client.Disconnect(true);
+            //         
+            // }
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Login()
@@ -216,6 +231,7 @@ namespace SEIIIAssignment.Controllers
             var userData = _context.Users.SingleOrDefault(x => x.UserName == username);
             if (userData == null || !BC.Verify(password, userData.Password)||userData.ApprovalStatus==0)
             {
+                ViewData["Message"] = "Invalid login credentials";
                 return View();
             }
 //Void Geeks. 2019. Role Based Authorization in ASP.NET Core Application. [online] Available at: <http://www.voidgeeks.com/tutorial/Role-Based-Authorization-in-ASPNET-Core-Application/9> [Accessed 5 January 2022].
@@ -285,7 +301,7 @@ namespace SEIIIAssignment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind("UserId,Name,Email,Password,UserName")] User user)
         {
-            var userExists = _context.Users.FirstOrDefault(x => x.UserName == user.UserName);
+            var userExists = _context.Users.FirstOrDefault(x => x.UserName == user.UserName || x.Email==user.Email);
             if (ModelState.IsValid && userExists == null)
             {
                 user.ApprovalStatus = 0;
@@ -297,7 +313,7 @@ namespace SEIIIAssignment.Controllers
                 return RedirectToAction("Login");
             }
 
-            ViewData["Message"] = "User already exits. Try another username";
+            ViewData["Message"] = "User already exits. Try another username or email";
                 return View(user);
             }
         

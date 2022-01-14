@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+
 using Microsoft.EntityFrameworkCore;
 using SEIIIAssignment.Models;
 
@@ -19,13 +18,13 @@ namespace SEIIIAssignment.Controllers
             _context = context;
         }
         [Authorize(Roles = "Admin")]
-        // GET: Categories
+ 
         public async Task<IActionResult> Index()
         {
             return View(await _context.Categories.ToListAsync());
         }
 
-        // GET: Categories/Details/5
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -50,9 +49,7 @@ namespace SEIIIAssignment.Controllers
             return View();
         }
 
-        // POST: Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -84,9 +81,7 @@ namespace SEIIIAssignment.Controllers
             return View(category);
         }
 
-        // POST: Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+     
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -120,7 +115,6 @@ namespace SEIIIAssignment.Controllers
             return View(category);
         }
 
-        // GET: Categories/Delete/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {

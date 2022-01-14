@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 #nullable disable
 
@@ -22,7 +24,6 @@ namespace SEIIIAssignment.Models
         public string Password { get; set; }
         [DisplayName("User Name")]
         public string UserName { get; set; }
-
         public int? ApprovalStatus { get; set; }
 
         public virtual ICollection<Bid> Bids { get; set; }

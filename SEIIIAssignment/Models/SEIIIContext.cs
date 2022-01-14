@@ -75,6 +75,7 @@ namespace SEIIIAssignment.Models
                 entity.HasOne(d => d.Item)
                     .WithMany(p => p.Bids)
                     .HasForeignKey(d => d.ItemId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Bid_Item");
             });
 
@@ -170,16 +171,19 @@ namespace SEIIIAssignment.Models
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Items)
                     .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Item_Category");
 
                 entity.HasOne(d => d.Classification)
                     .WithMany(p => p.Items)
                     .HasForeignKey(d => d.ClassificationId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Item_Classification");
 
                 entity.HasOne(d => d.Postedby)
                     .WithMany(p => p.ItemPostedbies)
                     .HasForeignKey(d => d.PostedbyId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Item_User");
             });
 

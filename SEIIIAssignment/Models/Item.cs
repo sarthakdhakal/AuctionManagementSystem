@@ -26,7 +26,7 @@ namespace SEIIIAssignment.Models
         public double? Height { get; set; }
         public double? Length { get; set; }
         public string Medium { get; set; }
-        [DisplayName("Framed or Unframed")]
+        [DisplayName("Framed?")]
         public int? IsFramed { get; set; }
         public int? Width { get; set; }
         [DisplayName("Product Name")]
@@ -47,7 +47,6 @@ namespace SEIIIAssignment.Models
         public int? ArchiveStatus { get; set; }
         [DisplayName("Image Type")]
         public string ImageType { get; set; }
-
         public virtual User Boughtby { get; set; }
         public virtual Category Category { get; set; }
         public virtual Classification Classification { get; set; }

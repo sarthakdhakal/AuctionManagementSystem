@@ -24,7 +24,7 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <ul class="navbar-nav flex-grow-1">
-                       
+
                         <li class="nav-item">
                             <a asp-action="Dashboard" asp-controller="Account" class="nav-link text-dark">Dashboard</a>
                         </li>
@@ -42,9 +42,7 @@
                             <li class="nav-item">
                                 <a asp-action="Index" asp-controller="Classifications" class="nav-link text-dark">Classifications</a>
                             </li>
-                            <li class="nav-item">
-                                <a asp-action="AdminItemsView" asp-controller="Items" class="nav-link text-dark">All Items</a>
-                            </li>
+
                         }
                         <li class="nav-item">
                             <a asp-action="Catalogue" asp-controller="Items" class="nav-link text-dark">Catalogue</a>

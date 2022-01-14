@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
+
 using System.IO;
 using System.Linq;
-using System.Net;
+
 using System.Security.Claims;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc;
+
 using MimeKit;
 using SEIIIAssignment.Models;
 
@@ -177,6 +175,7 @@ public async Task<IActionResult> Catalogue(string searchString)
 
                 DateTime date = (DateTime) item.StartDate;
                 item.EndDate = date.AddMinutes(1436);
+                // item.EndDate = date.AddMinutes(3);
                 item.CreatedAt = DateTime.Now;
                 item.PostedbyId = sellerId;
                 item.ArchiveStatus = 0;
@@ -184,25 +183,26 @@ public async Task<IActionResult> Catalogue(string searchString)
                 com = Math.Round((double) com, 2);
                 _context.Add(item);
                 await _context.SaveChangesAsync();
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Mr. Max Fotheby", "fothebyauctionhouse@gmail.com"));
-                message.To.Add(new MailboxAddress(Name,Email));
-                message.Subject = "Item "+item.ProductName+ " being added for auction";
-                message.Body = new TextPart("plain")
-                {
-                    Text = "Dear " + Name + ",\n\n\nWe are pleased to inform you that your piece " + item.ProductName +
-                           " has been scheduled for sale at our auction house in London on " + item.StartDate +
-                           "\n May I take this opportunity to remind you that should you wish to withdraw your item from the sale, you must notify this department before the auction date.). Any requests to withdraw the piece form sale after the stated deadline will result in a fee equivalent to 5% of the lower estimated price for your piece, this being Rs." +
-                           com +
-                           ", in line with your original sale agreement.\n\nMay I also take this opportunity again to thank you for using Fotherby’s auction house, as we seek to achieve the best possible selling price for your item.\n\nYours Sincerely,\n\nMr M Fotherby"
-                };
-                using (var client = new SmtpClient())
-                {
-                    client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate("fothebyauctionhouse@gmail.com","FothebysHouse123");
-                    client.Send(message);
-                    client.Disconnect(true);
-                }
+                //The code for the email has been commented out as and can be used by putting in credentials and allowing less secure apps in google accounrs
+                // var message = new MimeMessage();
+                // message.From.Add(new MailboxAddress("Mr. Max Fotheby", "fothebyauctionhouse@gmail.com"));
+                // message.To.Add(new MailboxAddress(Name,Email));
+                // message.Subject = "Item "+item.ProductName+ " being added for auction";
+                // message.Body = new TextPart("plain")
+                // {
+                //     Text = "Dear " + Name + ",\n\n\nWe are pleased to inform you that your piece " + item.ProductName +
+                //            " has been scheduled for sale at our auction house in London on " + item.StartDate +
+                //            "\n May I take this opportunity to remind you that should you wish to withdraw your item from the sale, you must notify this department before the auction date.). Any requests to withdraw the piece form sale after the stated deadline will result in a fee equivalent to 5% of the lower estimated price for your piece, this being Rs." +
+                //            com +
+                //            ", in line with your original sale agreement.\n\nMay I also take this opportunity again to thank you for using Fotherby’s auction house, as we seek to achieve the best possible selling price for your item.\n\nYours Sincerely,\n\nMr M Fotherby"
+                // };
+                // using (var client = new SmtpClient())
+                // {
+                //     client.Connect("smtp.gmail.com", 587, false);
+                //     client.Authenticate("","");
+                //     client.Send(message);
+                //     client.Disconnect(true);
+                // }
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -318,7 +318,11 @@ public async Task<IActionResult> Catalogue(string searchString)
             {
                 return NotFound();
             }
-
+            var bids = _context.Bids.Where(x => x.ItemId == item.ItemId).ToList();
+            foreach (var bid in bids)
+            {
+                _context.Bids.Remove(bid);
+            }     
             _context.Items.Remove(item);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
